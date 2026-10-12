@@ -145,6 +145,7 @@ const solutionSectors = [
 
 export default function HomePage() {
   const [banners, setBanners] = useState<Banner[]>([]);
+  const [bannersLoading, setBannersLoading] = useState(true);
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -218,15 +219,13 @@ export default function HomePage() {
 
   const loadData = async () => {
     try {
-      const [bannersRes, productsRes, trendingRes, categoriesRes, pressRes, offersRes] = await Promise.all([
-        api.get("/banners/public").catch(() => ({ data: [] })),
+      const [productsRes, trendingRes, categoriesRes, pressRes, offersRes] = await Promise.all([
         api.get("/products/public?featured=true&limit=8").catch(() => ({ data: { products: [] } })),
         api.get("/products/public?limit=12").catch(() => ({ data: { products: [] } })),
         api.get("/categories/public").catch(() => ({ data: [] })),
         api.get("/press/public").catch(() => ({ data: [] })),
         api.get("/offers/public").catch(() => ({ data: [] })),
       ]);
-      setBanners(bannersRes.data);
       setFeaturedProducts(productsRes.data.products || []);
       setTrendingProducts(trendingRes.data.products || []);
       setCategories(categoriesRes.data);
@@ -242,6 +241,23 @@ export default function HomePage() {
 
   useEffect(() => {
     loadData();
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    api.get("/banners/public")
+      .then((response) => {
+        if (!cancelled) setBanners(Array.isArray(response.data) ? response.data : []);
+      })
+      .catch(() => {
+        if (!cancelled) setBanners([]);
+      })
+      .finally(() => {
+        if (!cancelled) setBannersLoading(false);
+      });
+
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
@@ -282,58 +298,64 @@ export default function HomePage() {
     categories[0];
 
   return (
-    <div className="pb-8 sm:pb-10">
-      <section className="relative overflow-hidden bg-[#101d33] text-white">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(49,76,116,0.7),transparent_65%)]" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-12 sm:px-8 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-20">
-          <div>
-            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-[11px] font-semibold tracking-wide text-slate-200">
-              <FiMapPin className="text-[#ff9c54]" aria-hidden="true" /> Bihar · Jharkhand · Nepal
-            </p>
-            <h1 className="max-w-[14ch] text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
-              A safer world.<br /><span className="text-[#ff9c54]">Starts with Uniworld.</span>
-            </h1>
-            <p className="mt-5 max-w-lg text-base leading-7 text-slate-300">
-              CCTV cameras, networking and access control for your home, business or next project. Find the right security solution, with a team you can talk to.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 min-[400px]:flex-row">
-              <Link href="/products" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#FF6B00] px-6 text-sm font-bold text-white transition-colors hover:bg-[#e95f00] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff9c54]">
-                Browse products <FiArrowRight aria-hidden="true" />
-              </Link>
-              <Link href="/contact" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/30 px-6 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#101d33] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
-                Get dealer pricing
-              </Link>
-            </div>
-            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs font-medium text-slate-300">
-              <span className="inline-flex items-center gap-2"><FiCheck className="text-[#ff9c54]" aria-hidden="true" /> Product guidance</span>
-              <span className="inline-flex items-center gap-2"><FiCheck className="text-[#ff9c54]" aria-hidden="true" /> Dealer enquiries</span>
-              <span className="inline-flex items-center gap-2"><FiCheck className="text-[#ff9c54]" aria-hidden="true" /> Local support</span>
-            </div>
-          </div>
-          <div className="relative rounded-3xl border border-white/15 bg-white/[0.04] p-4 sm:p-6">
-            <div className="mb-4 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-              <span>Security, thoughtfully connected</span><FiShield size={18} className="text-[#ff9c54]" aria-hidden="true" />
-            </div>
-            <div className="relative aspect-[5/4] overflow-hidden rounded-2xl bg-[#f4f6f8]">
-              <Image src={heroProduct?.images[0]?.url || "/images/security-camera.svg"} alt={heroProduct?.name || "Illustration of a CCTV security camera"} fill unoptimized priority sizes="(max-width: 1024px) 90vw, 520px" className="object-contain p-8 sm:p-12" />
-            </div>
-            <div className="mt-4 flex items-center justify-between gap-4">
-              <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#ff9c54]">Explore our range</p>
-                <p className="mt-1 line-clamp-1 text-sm font-semibold">{heroProduct?.name || "CCTV & surveillance solutions"}</p>
+    <div className="pb-6 sm:pb-8">
+      {bannersLoading ? (
+        <section className="aspect-[1900/568] w-full bg-slate-100" aria-label="Loading homepage banner" aria-busy="true">
+          <span role="status" className="sr-only">Loading banner…</span>
+        </section>
+      ) : banners.length === 0 ? (
+        <section className="relative overflow-hidden bg-[#101d33] text-white">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(49,76,116,0.7),transparent_65%)]" />
+          <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-5 py-8 sm:px-8 sm:py-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:py-12">
+            <div>
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-[11px] font-semibold tracking-wide text-slate-200">
+                <FiMapPin className="text-[#ff9c54]" aria-hidden="true" /> Bihar · Jharkhand · Nepal
+              </p>
+              <h1 className="max-w-[14ch] text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+                A safer world.<br /><span className="text-[#ff9c54]">Starts with Uniworld.</span>
+              </h1>
+              <p className="mt-5 max-w-lg text-base leading-7 text-slate-300">
+                CCTV cameras, networking and access control for your home, business or next project. Find the right security solution, with a team you can talk to.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 min-[400px]:flex-row">
+                <Link href="/products" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#FF6B00] px-6 text-sm font-bold text-white transition-colors hover:bg-[#e95f00] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff9c54]">
+                  Browse products <FiArrowRight aria-hidden="true" />
+                </Link>
+                <Link href="/contact" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/30 px-6 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#101d33] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                  Get dealer pricing
+                </Link>
               </div>
-              <Link href={heroProduct ? `/products/${heroProduct.slug}` : "/products"} aria-label={heroProduct ? `View ${heroProduct.name}` : "View security products"} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 transition-colors hover:bg-white hover:text-[#101d33] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"><FiArrowUpRight size={20} aria-hidden="true" /></Link>
+              <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs font-medium text-slate-300">
+                <span className="inline-flex items-center gap-2"><FiCheck className="text-[#ff9c54]" aria-hidden="true" /> Product guidance</span>
+                <span className="inline-flex items-center gap-2"><FiCheck className="text-[#ff9c54]" aria-hidden="true" /> Dealer enquiries</span>
+                <span className="inline-flex items-center gap-2"><FiCheck className="text-[#ff9c54]" aria-hidden="true" /> Local support</span>
+              </div>
+            </div>
+            <div className="relative rounded-3xl border border-white/15 bg-white/[0.04] p-4 sm:p-6">
+              <div className="mb-4 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                <span>Security, thoughtfully connected</span><FiShield size={18} className="text-[#ff9c54]" aria-hidden="true" />
+              </div>
+              <div className="relative aspect-[5/4] overflow-hidden rounded-2xl bg-[#f4f6f8]">
+                <Image src={heroProduct?.images[0]?.url || "/images/security-camera.svg"} alt={heroProduct?.name || "Illustration of a CCTV security camera"} fill unoptimized priority sizes="(max-width: 1024px) 90vw, 520px" className="object-contain p-8 sm:p-12" />
+              </div>
+              <div className="mt-4 flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#ff9c54]">Explore our range</p>
+                  <p className="mt-1 line-clamp-1 text-sm font-semibold">{heroProduct?.name || "CCTV & surveillance solutions"}</p>
+                </div>
+                <Link href={heroProduct ? `/products/${heroProduct.slug}` : "/products"} aria-label={heroProduct ? `View ${heroProduct.name}` : "View security products"} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 transition-colors hover:bg-white hover:text-[#101d33] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"><FiArrowUpRight size={20} aria-hidden="true" /></Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      {banners.length > 0 ? (
+        </section>
+      ) : (
         <section
-          className="relative mx-auto my-6 max-w-7xl overflow-hidden rounded-xl border border-slate-200 bg-white sm:my-8"
+          className="relative w-full overflow-hidden bg-white"
           aria-label="Uniworld announcements"
           onTouchStart={banners.length > 1 ? handleBannerTouchStart : undefined}
           onTouchEnd={banners.length > 1 ? handleBannerTouchEnd : undefined}
         >
+          <h1 className="sr-only">Uniworld CCTV &amp; Security Solutions</h1>
           <div
             onTransitionEnd={handleBannerTransitionEnd}
             className={`relative flex ${isLoopReset ? "transition-none" : "transition-transform duration-1000 ease-out"}`}
@@ -389,9 +411,9 @@ export default function HomePage() {
             </>
           )}
         </section>
-      ) : null}
+      )}
 
-      <section className="bg-white py-10 md:py-14 border-b border-gray-100">
+      <section className="bg-white py-6 md:py-8 border-b border-gray-100">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
@@ -408,65 +430,42 @@ export default function HomePage() {
             From a single camera to a connected security system. Explore products for homes, businesses and institutions, and let us help you choose.
           </p>
 
-          {(() => {
-            const featuredOffer = offers.find((o) => o.position === "featured") || offers[0];
-            const gridCards = featuredOffer ? [featuredOffer, ...offers.filter((o) => o.id !== featuredOffer.id)] : [];
-
-            return (
-              <div className="mt-8 grid items-stretch gap-5 lg:grid-cols-2">
-                  <Link
-                    href="/products"
-                    className="group relative flex min-h-[380px] flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-[#edf2f7] p-7 sm:min-h-[440px] sm:p-9 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF6B00]"
-                  >
-                    <div className="relative z-10">
-                      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#b94e00]">Built around your needs</p>
-                      <h3 className="mt-3 max-w-[15ch] text-3xl font-bold leading-tight text-[#1b2a4a]">The right view.<br />The right protection.</h3>
+          {offers.length > 0 ? (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[...offers.filter((offer) => offer.position === "featured"), ...offers.filter((offer) => offer.position !== "featured")]
+                .map((card) => (
+                  <Link key={card.id} href={card.link || "/products"} className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF6B00]">
+                    <div className="relative aspect-[16/10] bg-slate-50">
+                      <Image src={card.image} alt={card.title || "Uniworld offer"} fill sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 300px" className="object-contain p-2 transition-transform duration-500 group-hover:scale-[1.03]" />
                     </div>
-                    <div className="relative my-4 h-48 sm:h-56">
-                      <Image src="/images/security-camera.svg" alt="Illustration of a CCTV camera" fill sizes="(max-width: 1024px) 90vw, 560px" className="object-contain transition-transform duration-500 group-hover:scale-105" />
+                    <div className="flex flex-1 flex-col p-4">
+                      <h3 className="text-sm font-bold leading-5 text-[#1b2a4a]">{card.title}</h3>
+                      {card.description && <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500">{card.description}</p>}
+                      <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-semibold text-[#b94e00]">{card.buttonText || "Explore"}<FiArrowUpRight aria-hidden="true" /></span>
                     </div>
-                    <span className="relative z-10 inline-flex items-center gap-2 text-sm font-bold text-[#1b2a4a]">Find your security solution <FiArrowRight aria-hidden="true" /></span>
                   </Link>
-
-                {gridCards.length > 0 && (
-                  <div className={`grid gap-4 h-full ${gridCards.length === 1 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"}`}>
-                    {gridCards.map((card) => (
-                      <Link key={card.id} href={card.link || "/products"} className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF6B00]">
-                        <div className="relative aspect-[16/10] bg-slate-50">
-                          <Image src={card.image} alt={card.title || "Uniworld offer"} fill sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 300px" className="object-contain p-2 transition-transform duration-500 group-hover:scale-[1.03]" />
-                        </div>
-                        <div className="flex flex-1 flex-col p-4">
-                          <h3 className="text-sm font-bold leading-5 text-[#1b2a4a]">{card.title}</h3>
-                          {card.description && <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500">{card.description}</p>}
-                          <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-semibold text-[#b94e00]">{card.buttonText || "Explore"}<FiArrowUpRight aria-hidden="true" /></span>
-                        </div>
-                      </Link>
-                  ))}
-                </div>
-                )}
-                {gridCards.length === 0 && (
-                  <div className="grid gap-4">
-                    {securityRanges.map((range) => (
-                      <Link key={range.title} href="/products" className="group flex items-center gap-5 rounded-xl border border-slate-200 bg-white p-6 transition-colors hover:border-[#FF6B00]/50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF6B00]">
-                        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#fff4ec] text-[#b94e00]"><range.icon size={25} aria-hidden="true" /></span>
-                        <div><h3 className="font-bold text-[#1b2a4a]">{range.title}</h3><p className="mt-1 text-sm leading-6 text-slate-500">{range.description}</p></div>
-                        <FiArrowUpRight className="ml-auto shrink-0 text-slate-400 group-hover:text-[#b94e00]" aria-hidden="true" />
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })()}
+                ))}
+            </div>
+          ) : (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {securityRanges.map((range) => (
+                <Link key={range.title} href="/products" className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 transition-colors hover:border-[#FF6B00]/50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF6B00]">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#fff4ec] text-[#b94e00]"><range.icon size={24} aria-hidden="true" /></span>
+                  <div><h3 className="font-bold text-[#1b2a4a]">{range.title}</h3><p className="mt-1 text-sm leading-5 text-slate-500">{range.description}</p></div>
+                  <FiArrowUpRight className="ml-auto shrink-0 text-slate-400 group-hover:text-[#b94e00]" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* Trending Items - CP PLUS Style */}
       {visibleTrendingProducts.length > 0 && (
-        <section className="bg-[#f2f4f6] py-10 md:py-12 border-b border-gray-200">
-          <div className="container mx-auto px-4 sm:px-6">
+        <section className="bg-[#f2f4f6] py-6 md:py-8 border-b border-gray-200">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
             {/* Header row */}
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
               <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
                 <h2 className="text-2xl sm:text-[28px] font-bold text-gray-900 tracking-tight">
                   Latest products
@@ -554,7 +553,7 @@ export default function HomePage() {
       )}
 
       {categories.length > 0 && (
-        <section className="border-b border-slate-100 bg-[#f7f9fc] py-12 md:py-16">
+        <section className="border-b border-slate-100 bg-[#f7f9fc] py-6 md:py-8">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -564,7 +563,7 @@ export default function HomePage() {
               </div>
               <Link href="/products" className="inline-flex items-center gap-2 text-sm font-semibold text-[#1b2a4a] hover:text-[#b94e00]">View all products <FiArrowRight aria-hidden="true" /></Link>
             </div>
-            <div className="mt-8 grid min-w-0 gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
               <div className="min-w-0">
                 <p className="mb-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Categories</p>
                 <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible">
@@ -621,9 +620,9 @@ export default function HomePage() {
       )}
 
       {/* Industry Solutions */}
-      <section className="bg-white py-8 md:py-10">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="mb-6 max-w-3xl md:mb-8">
+      <section className="bg-white py-6 md:py-8">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="mb-5 max-w-3xl">
             <p className="mb-3 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#e86c22]">
               <span className="h-px w-8 bg-[#e86c22]" />
               Security by environment
@@ -662,7 +661,7 @@ export default function HomePage() {
 
       {/* Print & Press */}
       {pressItems.length > 0 && (
-        <section className="bg-[#f0f2f2] py-10 md:py-14">
+        <section className="bg-[#f0f2f2] py-6 md:py-8">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <div className="mb-5 flex items-center justify-between gap-4">
               <div>
@@ -724,9 +723,9 @@ export default function HomePage() {
 
       {/* Featured Products */}
       {featuredProducts.length > 0 && (
-        <section className="py-8 md:py-12">
-          <div className="container mx-auto px-4">
-            <div className="mb-6 text-center md:mb-8">
+        <section className="py-6 md:py-8">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="mb-5 text-center">
               <span className="section-eyebrow">
                 <span className="h-px w-6 bg-[#FF6B00]" />
                 Featured range
@@ -735,7 +734,7 @@ export default function HomePage() {
                 High-performance products for every environment
               </h2>
             </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {featuredProducts.map((product) => (
                 <Link
                   key={product.id}
@@ -788,8 +787,8 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="mx-auto mt-10 max-w-7xl px-5 sm:px-8">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-2xl bg-[#1b2a4a] p-7 text-white sm:p-10 md:flex-row md:items-center">
+      <section className="mx-auto mt-6 max-w-7xl px-5 sm:px-8">
+        <div className="flex flex-col items-start justify-between gap-5 rounded-2xl bg-[#1b2a4a] p-6 text-white sm:p-8 md:flex-row md:items-center">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#ff9c54]">Let’s build your security setup</p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">Not sure where to start?</h2>
