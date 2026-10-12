@@ -27,7 +27,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#172027] text-slate-300">
-      {pathname !== "/contact" && <section className="border-y border-slate-200 bg-[#f1f3f4] text-[#243240]">
+      {pathname !== "/contact" && pathname !== "/support" && <section className="border-y border-slate-200 bg-[#f1f3f4] text-[#243240]">
         <div className="container mx-auto px-4 py-8 sm:px-6 md:py-10">
           <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
