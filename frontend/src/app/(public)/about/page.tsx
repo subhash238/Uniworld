@@ -1,6 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
-  Building2,
+  ArrowRight,
   Camera,
   Cable,
   HardDrive,
@@ -19,680 +20,253 @@ import {
   BadgeCheck,
   Sparkles,
   Handshake,
+  Check,
 } from "lucide-react";
+
+const milestones = [
+  {
+    year: "2009",
+    title: "Foundation",
+    description: "Uniworld Vision was established with the vision of delivering dependable security solutions backed by quality products and exceptional customer service.",
+  },
+  {
+    year: "2012",
+    title: "CP PLUS Partnership",
+    description: "Expanded our surveillance portfolio by becoming a trusted distribution partner of CP PLUS.",
+  },
+  {
+    year: "2014",
+    title: "Dahua Technology",
+    description: "Partnered with Dahua Technology to provide advanced surveillance solutions across Eastern India.",
+  },
+  {
+    year: "2016",
+    title: "Market Leadership",
+    description: "Recognized as one of Bihar's leading CCTV distribution partners through continuous growth and customer trust.",
+  },
+  {
+    year: "2019",
+    title: "Hikvision Partnership",
+    description: "Added Hikvision products to our portfolio, offering customers even more advanced and reliable security solutions.",
+  },
+  {
+    year: "2020",
+    title: "Jharkhand Expansion",
+    description: "Opened our Jharkhand branch to improve product availability and technical support.",
+  },
+  {
+    year: "2023",
+    title: "Launch of UNIWORLD Brand",
+    description: "Started manufacturing CCTV cameras, recorders, networking products, and surveillance accessories under our own UNIWORLD brand.",
+  },
+  {
+    year: "2024",
+    title: "Rapid Growth",
+    description: "Became one of the fastest-growing CCTV companies across Bihar and Jharkhand while expanding throughout Eastern India.",
+  },
+];
+
+const productRanges = [
+  { icon: Camera, title: "IP CCTV Cameras" },
+  { icon: MonitorSmartphone, title: "HD Analog Cameras" },
+  { icon: Cpu, title: "AI Smart Cameras" },
+  { icon: Wifi, title: "Wi-Fi Cameras" },
+  { icon: Camera, title: "PTZ Cameras" },
+  { icon: Camera, title: "4G Solar Cameras" },
+  { icon: Server, title: "DVR & NVR" },
+  { icon: Network, title: "PoE Switches" },
+  { icon: Cable, title: "CAT6 Cables" },
+  { icon: HardDrive, title: "Surveillance HDD" },
+  { icon: Boxes, title: "Accessories" },
+  { icon: ShieldCheck, title: "Security Products" },
+];
+
+const strengths = [
+  { icon: Factory, title: "Manufacturing Excellence", description: "Products manufactured using modern technology with strict quality standards." },
+  { icon: Boxes, title: "Complete Product Range", description: "Everything from CCTV cameras to networking equipment under one roof." },
+  { icon: Truck, title: "Strong Distribution Network", description: "Reliable dealer network ensuring fast product availability across multiple states." },
+  { icon: ShieldCheck, title: "Quality Assurance", description: "Every product is tested to deliver consistent performance and durability." },
+  { icon: Cpu, title: "Innovation", description: "AI surveillance, cloud connectivity, smart monitoring, and future-ready solutions." },
+  { icon: Headset, title: "Dedicated Support", description: "Professional technical guidance and responsive after-sales service for every customer." },
+];
+
+const mission = [
+  "Manufacture high-quality surveillance products.",
+  "Deliver reliable and affordable security solutions.",
+  "Support dealers and business partners.",
+  "Continuously innovate with emerging technologies.",
+  "Help create safer homes, businesses, and communities.",
+];
+
+const values = [
+  { icon: Handshake, title: "Integrity" },
+  { icon: ShieldCheck, title: "Quality" },
+  { icon: Sparkles, title: "Innovation" },
+  { icon: BadgeCheck, title: "Customer Focus" },
+  { icon: Target, title: "Reliability" },
+];
+
+const regions = ["Bihar", "Jharkhand", "West Bengal", "Odisha", "Nepal"];
+const sectors = ["Residential", "Commercial", "Industrial", "Education", "Healthcare", "Banking", "Hospitality", "Retail", "Government"];
+
 export default function AboutPage() {
   return (
-    <main className="bg-white">
-      {/* ================= HERO ================= */}
-
-      <section className="relative overflow-hidden bg-primary from-[#0B3D91] via-[#0F4C81] to-slate-900 text-white">
-        <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-10" />
-
-        <div className="relative mx-auto flex max-w-7xl flex-col items-center px-6 py-24 text-center lg:px-8">
-          <span className="mb-5 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-medium backdrop-blur">
-            Established in 2009
-          </span>
-
-          <h1 className="max-w-4xl text-4xl font-extrabold leading-tight md:text-6xl">
-            Securing Tomorrow,
-            <span className="block text-white">Today</span>
-          </h1>
-
-          <p className="mt-8 max-w-3xl text-lg leading-8 text-blue-100 md:text-xl">
-            Uniworld Vision Pvt. Ltd. is one of Eastern India's fastest-growing
-            manufacturers and distributors of CCTV surveillance systems,
-            networking products, and security accessories.
-          </p>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/products"
-              className="rounded-xl bg-white px-8 py-4 font-semibold text-[#0B3D91] transition hover:scale-105"
-            >
-              Explore Products
-            </Link>
-
-            <Link
-              href="/contact"
-              className="rounded-xl border border-white/30 px-8 py-4 font-semibold transition hover:bg-white hover:text-[#0B3D91]"
-            >
-              Contact Us
-            </Link>
-          </div>
+    <div className="bg-white">
+      <section className="bg-[#17253d] px-5 py-7 text-white sm:px-8 md:py-8">
+        <div className="mx-auto max-w-7xl">
+          <nav aria-label="Breadcrumb" className="mb-2 flex items-center gap-2 text-xs text-slate-300">
+            <Link href="/" className="hover:text-white">Home</Link>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">About us</span>
+          </nav>
+          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">About Uniworld Vision</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-300">Manufacturing, distribution and security expertise since 2009.</p>
         </div>
       </section>
 
-      {/* ================= ABOUT ================= */}
-
-      <section className="py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2 lg:px-8">
+      <section className="py-6 md:py-8">
+        <div className="mx-auto grid max-w-7xl items-center gap-6 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
           <div>
-            <span className="font-semibold uppercase tracking-widest text-blue-600">
-              About Uniworld Vision
-            </span>
-
-            <h2 className="mt-3 text-4xl font-bold text-slate-900">
-              Building Trust Through Intelligent Security Solutions
-            </h2>
-
-            <p className="mt-8 text-lg leading-8 text-slate-600">
-              Since <strong>2009</strong>, Uniworld Vision Pvt. Ltd. has been
-              committed to delivering reliable, innovative, and cost-effective
-              security solutions that protect homes, businesses, industries,
-              educational institutions, healthcare facilities, and public
-              infrastructure.
-            </p>
-
-            <p className="mt-6 text-lg leading-8 text-slate-600">
-              What started as a regional distributor has evolved into one of
-              Eastern India's most trusted security technology companies with a
-              strong presence across Bihar, Jharkhand, West Bengal, Odisha,
-              Nepal, and other parts of Eastern India.
-            </p>
-
-            <p className="mt-6 text-lg leading-8 text-slate-600">
-              Today, we proudly manufacture CCTV cameras and surveillance
-              products under the
-              <span className="font-semibold text-slate-900">
-                {" "}
-                UNIWORLD
-              </span>{" "}
-              brand while distributing products from globally recognized
-              security brands.
-            </p>
-          </div>
-
-          {/* Right Side */}
-
-          <div className="relative">
-            <div className="overflow-hidden rounded-3xl shadow-2xl">
-              <img
-                src="/about/company.jpeg"
-                alt="Uniworld Vision"
-                className="h-full w-full object-cover"
-              />
-            </div>
-
-            <div className="absolute -bottom-0 -left-0 rounded-2xl bg-white p-6 shadow-xl">
-              <h3 className="text-4xl font-bold text-blue-700">16+</h3>
-
-              <p className="mt-2 text-sm font-medium text-slate-600">
-                Years of Industry Experience
-              </p>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#b94e00]">Our story</p>
+            <h2 className="mt-2 text-2xl font-bold leading-tight text-[#1b2a4a] sm:text-3xl">Building trust through intelligent security solutions</h2>
+            <div className="mt-4 space-y-4 text-base leading-7 text-slate-600">
+              <p>Since <strong className="font-semibold text-[#1b2a4a]">2009</strong>, Uniworld Vision Pvt. Ltd. has been committed to reliable, innovative and cost-effective security solutions for homes, businesses, industries, institutions and public infrastructure.</p>
+              <p>What started as a regional distributor has grown into a security technology company with a strong presence across Bihar, Jharkhand, West Bengal, Odisha, Nepal and other parts of Eastern India.</p>
+              <p>Today, we manufacture CCTV cameras and surveillance products under the <strong className="font-semibold text-[#1b2a4a]">UNIWORLD</strong> brand while distributing products from globally recognized security brands.</p>
+              <p>Our team works closely with dealers, distributors, system integrators and end users, combining product guidance with responsive technical and after-sales support.</p>
             </div>
           </div>
-        </div>
-      </section>
-      {/* ================= OUR JOURNEY ================= */}
-
-      <section className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="font-semibold uppercase tracking-widest text-blue-600">
-              Our Journey
-            </span>
-
-            <h2 className="mt-3 text-4xl font-bold text-slate-900">
-              A Legacy of Growth & Innovation
-            </h2>
-
-            <p className="mt-6 text-lg leading-8 text-slate-600">
-              Since 2009, Uniworld Vision has continuously evolved by embracing
-              innovation, building strong partnerships, and delivering reliable
-              security solutions across Eastern India.
-            </p>
-          </div>
-
-          {/* Timeline */}
-
-          <div className="relative mx-auto mt-20 max-w-5xl">
-            {/* Center Line */}
-
-            <div className="absolute left-4 top-0 h-full w-1 rounded bg-blue-200 md:left-1/2 md:-translate-x-1/2" />
-
-            {[
-              {
-                year: "2009",
-                title: "Foundation",
-                description:
-                  "Uniworld Vision was established with the vision of delivering dependable security solutions backed by quality products and exceptional customer service.",
-              },
-              {
-                year: "2012",
-                title: "CP PLUS Partnership",
-                description:
-                  "Expanded our surveillance portfolio by becoming a trusted distribution partner of CP PLUS.",
-              },
-              {
-                year: "2014",
-                title: "Dahua Technology",
-                description:
-                  "Partnered with Dahua Technology to provide advanced surveillance solutions across Eastern India.",
-              },
-              {
-                year: "2016",
-                title: "Market Leadership",
-                description:
-                  "Recognized as one of Bihar's leading CCTV distribution partners through continuous growth and customer trust.",
-              },
-              {
-                year: "2019",
-                title: "Hikvision Partnership",
-                description:
-                  "Added Hikvision products to our portfolio, offering customers even more advanced and reliable security solutions.",
-              },
-              {
-                year: "2020",
-                title: "Jharkhand Expansion",
-                description:
-                  "Opened our Jharkhand branch to improve product availability and technical support.",
-              },
-              {
-                year: "2023",
-                title: "Launch of UNIWORLD Brand",
-                description:
-                  "Started manufacturing CCTV cameras, recorders, networking products, and surveillance accessories under our own UNIWORLD brand.",
-              },
-              {
-                year: "2024",
-                title: "Rapid Growth",
-                description:
-                  "Became one of the fastest-growing CCTV companies across Bihar and Jharkhand while expanding throughout Eastern India.",
-              },
-            ].map((item, index) => (
-              <div
-                key={item.year}
-                className={`relative mb-14 flex md:items-center ${
-                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
-              >
-                {/* Card */}
-
-                <div className="ml-14 w-full md:ml-0 md:w-1/2 md:px-10">
-                  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                    <span className="text-sm font-semibold uppercase tracking-wide text-blue-600">
-                      {item.year}
-                    </span>
-
-                    <h3 className="mt-2 text-2xl font-bold text-slate-900">
-                      {item.title}
-                    </h3>
-
-                    <p className="mt-4 leading-7 text-slate-600">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Dot */}
-
-                <div className="absolute left-4 flex h-8 w-8 items-center justify-center rounded-full border-4 border-blue-600 bg-white md:left-1/2 md:-translate-x-1/2">
-                  <div className="h-3 w-3 rounded-full bg-blue-600" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* ================= WHO WE ARE ================= */}
-
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid items-center gap-16 lg:grid-cols-2">
-            {/* Left */}
-
-            <div>
-              <span className="font-semibold uppercase tracking-widest text-blue-600">
-                Who We Are
-              </span>
-
-              <h2 className="mt-3 text-4xl font-bold text-slate-900">
-                Complete Security Solutions Under One Roof
-              </h2>
-
-              <p className="mt-8 text-lg leading-8 text-slate-600">
-                Uniworld Vision Pvt. Ltd. specializes in the manufacturing and
-                distribution of CCTV surveillance systems, networking products,
-                and security accessories.
-              </p>
-
-              <p className="mt-6 text-lg leading-8 text-slate-600">
-                Our solutions are trusted across residential, commercial,
-                industrial, educational, healthcare, banking, hospitality,
-                retail, and government sectors.
-              </p>
-
-              <p className="mt-6 text-lg leading-8 text-slate-600">
-                Our experienced team works closely with dealers, distributors,
-                system integrators, and end users to deliver reliable products
-                backed by responsive technical and after-sales support.
-              </p>
-
-              <div className="mt-10 grid gap-4 sm:grid-cols-2">
-                <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-4">
-                  <ShieldCheck className="text-blue-600" />
-                  <span className="font-medium">Trusted Since 2009</span>
-                </div>
-
-                <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-4">
-                  <Building2 className="text-blue-600" />
-                  <span className="font-medium">Manufacturing Excellence</span>
-                </div>
-
-                <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-4">
-                  <Network className="text-blue-600" />
-                  <span className="font-medium">
-                    Strong Distribution Network
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-4">
-                  <BadgeCheck className="text-blue-600" />
-                  <span className="font-medium">Quality Assured Products</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right */}
-
-            <div className="overflow-hidden rounded-3xl shadow-2xl">
-              <img
-                src="/about/team.jpg"
-                alt="Uniworld Team"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= PRODUCTS ================= */}
-
-      <section className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="font-semibold uppercase tracking-widest text-blue-600">
-              Our Products
-            </span>
-
-            <h2 className="mt-3 text-4xl font-bold text-slate-900">
-              Complete Surveillance & Networking Portfolio
-            </h2>
-
-            <p className="mt-6 text-lg text-slate-600">
-              We manufacture and distribute a comprehensive range of CCTV,
-              networking, and security products designed for long-term
-              performance and reliability.
-            </p>
-          </div>
-
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: Camera,
-                title: "IP CCTV Cameras",
-              },
-              {
-                icon: MonitorSmartphone,
-                title: "HD Analog Cameras",
-              },
-              {
-                icon: Cpu,
-                title: "AI Smart Cameras",
-              },
-              {
-                icon: Wifi,
-                title: "Wi-Fi Cameras",
-              },
-              {
-                icon: Camera,
-                title: "PTZ Cameras",
-              },
-              {
-                icon: Camera,
-                title: "4G Solar Cameras",
-              },
-              {
-                icon: Server,
-                title: "DVR & NVR",
-              },
-              {
-                icon: Network,
-                title: "PoE Switches",
-              },
-              {
-                icon: Cable,
-                title: "CAT6 Cables",
-              },
-              {
-                icon: HardDrive,
-                title: "Surveillance HDD",
-              },
-              {
-                icon: Boxes,
-                title: "Accessories",
-              },
-              {
-                icon: ShieldCheck,
-                title: "Security Products",
-              },
-            ].map((product) => (
-              <div
-                key={product.title}
-                className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:-translate-y-2 hover:border-blue-600 hover:shadow-xl"
-              >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-100 text-blue-700 transition group-hover:bg-blue-600 group-hover:text-white">
-                  <product.icon size={28} />
-                </div>
-
-                <h3 className="mt-6 text-lg font-semibold text-slate-900">
-                  {product.title}
-                </h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* ================= WHY CHOOSE US ================= */}
-
-      <section className="py-24 bg-white">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="font-semibold uppercase tracking-widest text-blue-600">
-              Why Choose Us
-            </span>
-
-            <h2 className="mt-3 text-4xl font-bold text-slate-900">
-              Trusted Security Partner Across Eastern India
-            </h2>
-
-            <p className="mt-6 text-lg text-slate-600">
-              We combine manufacturing excellence, innovative technology, and
-              dependable customer support to deliver complete surveillance
-              solutions that businesses trust.
-            </p>
-          </div>
-
-          <div className="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-            {[
-              {
-                icon: Factory,
-                title: "Manufacturing Excellence",
-                description:
-                  "Products manufactured using modern technology with strict quality standards.",
-              },
-              {
-                icon: Boxes,
-                title: "Complete Product Range",
-                description:
-                  "Everything from CCTV cameras to networking equipment under one roof.",
-              },
-              {
-                icon: Truck,
-                title: "Strong Distribution Network",
-                description:
-                  "Reliable dealer network ensuring fast product availability across multiple states.",
-              },
-              {
-                icon: ShieldCheck,
-                title: "Quality Assurance",
-                description:
-                  "Every product is tested to deliver consistent performance and durability.",
-              },
-              {
-                icon: Cpu,
-                title: "Innovation",
-                description:
-                  "AI surveillance, cloud connectivity, smart monitoring, and future-ready solutions.",
-              },
-              {
-                icon: Headset,
-                title: "Dedicated Support",
-                description:
-                  "Professional technical guidance and responsive after-sales service for every customer.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="group rounded-3xl border border-slate-200 bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:border-blue-600 hover:shadow-2xl"
-              >
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-blue-700 transition-all group-hover:bg-blue-600 group-hover:text-white">
-                  <item.icon size={30} />
-                </div>
-
-                <h3 className="mt-6 text-2xl font-semibold text-slate-900">
-                  {item.title}
-                </h3>
-
-                <p className="mt-4 leading-7 text-slate-600">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= VISION & MISSION ================= */}
-
-      <section className="bg-slate-50 py-24">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-2 lg:px-8">
-          <div className="rounded-3xl bg-white p-10 shadow-lg">
-            <Eye className="text-blue-600" size={42} />
-
-            <h2 className="mt-6 text-3xl font-bold text-slate-900">
-              Our Vision
-            </h2>
-
-            <p className="mt-6 text-lg leading-8 text-slate-600">
-              To become one of India's most trusted security technology brands
-              by delivering innovative products, reliable solutions, and
-              exceptional customer experiences.
-            </p>
-          </div>
-
-          <div className="rounded-3xl bg-primary p-10 text-white shadow-xl">
-            <Target size={42} />
-
-            <h2 className="mt-6 text-3xl font-bold">Our Mission</h2>
-
-            <ul className="mt-8 space-y-4">
+          <div>
+            <figure className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+              <Image src="/about/company.jpeg" alt="Group photo at a Uniworld Vision company event" width={447} height={447} priority sizes="(max-width: 1024px) 90vw, 500px" className="mx-auto h-auto w-full max-w-lg object-contain" />
+              <figcaption className="border-t border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">Working with dealers, distributors and security professionals.</figcaption>
+            </figure>
+            <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               {[
-                "Manufacture high-quality surveillance products.",
-                "Deliver reliable and affordable security solutions.",
-                "Support dealers and business partners.",
-                "Continuously innovate with emerging technologies.",
-                "Help create safer homes, businesses, and communities.",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <BadgeCheck className="mt-1 shrink-0 text-blue-300" />
-                  <span>{item}</span>
-                </li>
+                { number: "16+", title: "Years of experience" },
+                { number: "5+", title: "Regions served" },
+                { number: "100%", title: "Quality focus" },
+                { number: "24/7", title: "Technical support" },
+              ].map((stat) => (
+                <div key={stat.title}>
+                  <dt className="text-xs leading-5 text-slate-500">{stat.title}</dt>
+                  <dd className="mt-1 text-2xl font-bold text-[#1b2a4a]">{stat.number}</dd>
+                </div>
               ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-slate-100 bg-[#f7f9fc] py-6 md:py-8">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#b94e00]">Our journey</p>
+          <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">A legacy of growth &amp; innovation</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">From regional distribution to our own surveillance brand, each milestone reflects our growth across Eastern India.</p>
+          <ol className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {milestones.map((item) => (
+              <li key={item.year} className="rounded-xl border border-slate-200 bg-white p-5">
+                <div className="flex items-start gap-3">
+                  <span className="shrink-0 rounded-full bg-[#fff4ec] px-3 py-1 text-xs font-bold text-[#b94e00]">{item.year}</span>
+                  <h3 className="text-base font-bold text-[#1b2a4a]">{item.title}</h3>
+                </div>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="py-6 md:py-8">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-[#b94e00]">Products &amp; presence</p>
+              <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">A complete security portfolio</h2>
+            </div>
+            <Link href="/products" className="inline-flex items-center gap-2 text-sm font-bold text-[#b94e00] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6B00]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
+          </div>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">We manufacture and distribute CCTV, networking and security products designed for long-term performance and reliability.</p>
+          <ul className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-3">
+            {productRanges.map((product) => (
+              <li key={product.title} className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-3 sm:gap-3 sm:px-4">
+                <product.icon size={20} className="shrink-0 text-[#b94e00]" aria-hidden="true" />
+                <span className="text-sm font-semibold text-[#1b2a4a]">{product.title}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl bg-slate-50 p-5">
+              <h3 className="text-sm font-bold text-[#1b2a4a]">Where we work</h3>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {regions.map((region) => <li key={region} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600">{region}</li>)}
+              </ul>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-5">
+              <h3 className="text-sm font-bold text-[#1b2a4a]">Who we support</h3>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {sectors.map((sector) => <li key={sector} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600">{sector}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-slate-100 bg-[#f7f9fc] py-6 md:py-8">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#b94e00]">Why Uniworld</p>
+          <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">Products, partnerships and support</h2>
+          <ul className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {strengths.map((item) => (
+              <li key={item.title} className="flex items-start gap-3">
+                <item.icon size={22} className="mt-1 shrink-0 text-[#b94e00]" aria-hidden="true" />
+                <div>
+                  <h3 className="text-base font-bold text-[#1b2a4a]">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
+              <div className="flex items-center gap-3">
+                <Eye size={22} className="text-[#b94e00]" aria-hidden="true" />
+                <h3 className="text-lg font-bold text-[#1b2a4a]">Our vision</h3>
+              </div>
+              <p className="mt-3 text-sm leading-7 text-slate-600">To become one of India's most trusted security technology brands by delivering innovative products, reliable solutions, and exceptional customer experiences.</p>
+            </div>
+            <div className="rounded-xl bg-[#1b2a4a] p-5 text-white sm:p-6">
+              <div className="flex items-center gap-3">
+                <Target size={22} className="text-[#ff9c54]" aria-hidden="true" />
+                <h3 className="text-lg font-bold">Our mission</h3>
+              </div>
+              <ul className="mt-3 space-y-2">
+                {mission.map((item) => <li key={item} className="flex items-start gap-2 text-sm leading-6 text-slate-200"><Check size={16} className="mt-1 shrink-0 text-[#ff9c54]" aria-hidden="true" /><span>{item}</span></li>)}
+              </ul>
+            </div>
+          </div>
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <h3 className="text-sm font-bold text-[#1b2a4a]">Our values</h3>
+            <ul className="flex flex-wrap gap-2">
+              {values.map((value) => <li key={value.title} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600"><value.icon size={15} className="text-[#b94e00]" aria-hidden="true" />{value.title}</li>)}
             </ul>
           </div>
         </div>
       </section>
 
-      {/* ================= CORE VALUES ================= */}
-
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center">
-            <span className="font-semibold uppercase tracking-widest text-blue-600">
-              Core Values
-            </span>
-
-            <h2 className="mt-3 text-4xl font-bold text-slate-900">
-              The Principles That Drive Us
-            </h2>
+      <section className="mx-auto max-w-7xl px-5 py-6 sm:px-8 md:py-8">
+        <div className="flex flex-col items-start justify-between gap-5 rounded-xl bg-[#1b2a4a] p-6 text-white sm:p-8 lg:flex-row lg:items-center">
+          <div className="max-w-xl">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#ff9c54]">Building a safer future</p>
+            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Protect what matters most</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-300">From homes and businesses to institutions and communities, our team can help with product selection, project requirements and dealer enquiries.</p>
           </div>
-
-          <div className="mt-16 grid gap-8 md:grid-cols-2 xl:grid-cols-5">
-            {[
-              {
-                icon: Handshake,
-                title: "Integrity",
-              },
-              {
-                icon: ShieldCheck,
-                title: "Quality",
-              },
-              {
-                icon: Sparkles,
-                title: "Innovation",
-              },
-              {
-                icon: BadgeCheck,
-                title: "Customer Focus",
-              },
-              {
-                icon: Target,
-                title: "Reliability",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="group rounded-3xl border border-slate-200 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:border-blue-600 hover:shadow-xl"
-              >
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-700 transition-all group-hover:bg-blue-600 group-hover:text-white">
-                  <item.icon size={28} />
-                </div>
-
-                <h3 className="mt-6 text-xl font-semibold text-slate-900">
-                  {item.title}
-                </h3>
-              </div>
-            ))}
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row lg:shrink-0">
+            <Link href="/products" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#FF6B00] px-5 text-sm font-bold text-white transition hover:bg-[#e95f00] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
+            <Link href="/contact" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/30 px-5 text-sm font-bold transition hover:bg-white hover:text-[#1b2a4a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Contact our team</Link>
           </div>
         </div>
       </section>
-      {/* ================= OUR STRENGTHS ================= */}
-
-      <section className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center">
-            <span className="font-semibold uppercase tracking-widest text-blue-600">
-              Our Strengths
-            </span>
-
-            <h2 className="mt-3 text-4xl font-bold text-slate-900">
-              What Makes Uniworld Vision Different
-            </h2>
-
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">
-              More than a manufacturer, we are a trusted technology partner
-              delivering dependable surveillance and networking solutions backed
-              by quality, innovation, and customer-first service.
-            </p>
-          </div>
-
-          <div className="mt-16 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {[
-              {
-                number: "16+",
-                title: "Years of Experience",
-                desc: "Delivering trusted security solutions since 2009.",
-              },
-              {
-                number: "5+",
-                title: "Regions Served",
-                desc: "Strong presence across Eastern India & Nepal.",
-              },
-              {
-                number: "100%",
-                title: "Quality Focus",
-                desc: "Every product undergoes strict quality testing.",
-              },
-              {
-                number: "24/7",
-                title: "Technical Support",
-                desc: "Reliable assistance for dealers and customers.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-              >
-                <h3 className="text-5xl font-extrabold text-blue-700">
-                  {item.number}
-                </h3>
-
-                <h4 className="mt-5 text-xl font-semibold text-slate-900">
-                  {item.title}
-                </h4>
-
-                <p className="mt-4 leading-7 text-slate-600">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 grid gap-4 md:grid-cols-2">
-            {[
-              "Manufacturer of CCTV products under the UNIWORLD brand",
-              "Complete CCTV, networking & security product portfolio",
-              "Strong dealer and distributor network",
-              "Presence across Bihar, Jharkhand, West Bengal, Odisha & Nepal",
-              "Experienced technical & after-sales support team",
-              "Committed to innovation, reliability & customer satisfaction",
-            ].map((item) => (
-              <div
-                key={item}
-                className="flex items-start gap-3 rounded-2xl bg-white p-5 shadow-sm"
-              >
-                <div className="mt-1 h-3 w-3 rounded-full bg-blue-600" />
-                <p className="text-slate-700">{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= CTA ================= */}
-
-      <section className="relative overflow-hidden bg-primary from-[#0B3D91] via-[#0F4C81] to-slate-900 py-24 text-white">
-        <div className="absolute inset-0 opacity-10">
-          <div className="h-full w-full bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
-        </div>
-
-        <div className="relative mx-auto max-w-5xl px-6 text-center lg:px-8">
-          <span className="rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-medium backdrop-blur">
-            Building a Safer Future
-          </span>
-
-          <h2 className="mt-8 text-4xl font-bold md:text-5xl">
-            Protect What Matters Most
-          </h2>
-
-          <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-blue-100">
-            For more than 16 years, Uniworld Vision Pvt. Ltd. has helped secure
-            homes, businesses, industries, institutions, and communities through
-            trusted surveillance technology.
-          </p>
-
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-blue-100">
-            As technology evolves, we continue to innovate, expand, and deliver
-            intelligent security solutions that create safer environments and
-            build lasting confidence among our customers and partners.
-          </p>
-
-          <div className="mt-12 flex flex-wrap justify-center gap-5">
-            <Link
-              href="/products"
-              className="rounded-xl bg-white px-8 py-4 font-semibold text-[#0F4C81] transition hover:scale-105"
-            >
-              Explore Products
-            </Link>
-
-            <Link
-              href="/contact"
-              className="rounded-xl border border-white/30 px-8 py-4 font-semibold transition hover:bg-white hover:text-[#0F4C81]"
-            >
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </section>
-    </main>
+    </div>
   );
 }
