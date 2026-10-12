@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import api from "@/lib/api";
-import { FiCamera, FiSearch, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiArrowRight, FiCamera, FiSearch, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 interface Product {
   id: string;
@@ -34,6 +34,30 @@ interface Category {
   subCategories?: SubCategory[];
 }
 
+function ProductImage({ src, name }: { src?: string; name: string }) {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+
+  return (
+    <div className="relative flex h-40 items-center justify-center overflow-hidden rounded-xl bg-slate-50 sm:h-44">
+      {src && failedSrc !== src ? (
+        <Image
+          src={src}
+          alt={name}
+          fill
+          sizes="(max-width: 640px) 90vw, (max-width: 1280px) 45vw, 280px"
+          className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+          onError={() => setFailedSrc(src)}
+        />
+      ) : (
+        <div className="flex flex-col items-center gap-2 text-slate-400">
+          <FiCamera size={32} aria-hidden="true" />
+          <span className="text-xs font-medium">Image unavailable</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category") || "";
@@ -42,6 +66,9 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retryToken, setRetryToken] = useState(0);
+  const [searchDraft, setSearchDraft] = useState("");
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl);
   const [selectedSubCategory, setSelectedSubCategory] = useState(subFromUrl);
@@ -59,10 +86,6 @@ export default function ProductsPage() {
     setPage(1);
   }, [categoryFromUrl, subFromUrl]);
 
-  useEffect(() => {
-    loadProducts();
-  }, [page, selectedCategory, selectedSubCategory, search]);
-
   const loadCategories = async () => {
     try {
       const res = await api.get("/categories/public");
@@ -72,110 +95,115 @@ export default function ProductsPage() {
     }
   };
 
-  const loadProducts = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({ page: page.toString(), limit: "15" });
-      if (selectedCategory) params.append("category", selectedCategory);
-      if (selectedSubCategory) params.append("subCategory", selectedSubCategory);
-      if (search) params.append("search", search);
-
-      const res = await api.get(`/products/public?${params}`);
-      setProducts(res.data.products || []);
-      setTotalPages(res.data.pagination?.pages || 1);
-      setTotalProducts(res.data.pagination?.total || (res.data.products || []).length);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const currentCategoryObj = categories.find((c) => c.id === selectedCategory || c.slug === selectedCategory);
   const currentSubCategoryObj = currentCategoryObj?.subCategories?.find(
     (s) => s.id === selectedSubCategory || s.slug === selectedSubCategory
   );
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadProducts = async () => {
+      setLoading(true);
+      setError(false);
+      try {
+        const params = new URLSearchParams({ page: page.toString(), limit: "15" });
+        if (selectedCategory) params.set("category", currentCategoryObj?.id || selectedCategory);
+        if (selectedSubCategory) params.set("subCategory", currentSubCategoryObj?.id || selectedSubCategory);
+        if (search) params.set("search", search);
+
+        const res = await api.get(`/products/public?${params}`);
+        if (cancelled) return;
+        const nextProducts = Array.isArray(res.data.products) ? res.data.products : [];
+        setProducts(nextProducts);
+        setTotalPages(res.data.pagination?.pages || 1);
+        setTotalProducts(res.data.pagination?.total ?? nextProducts.length);
+      } catch (error) {
+        if (cancelled) return;
+        console.error(error);
+        setError(true);
+        setProducts([]);
+        setTotalPages(1);
+        setTotalProducts(0);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadProducts();
+    return () => { cancelled = true; };
+  }, [page, selectedCategory, selectedSubCategory, search, currentCategoryObj?.id, currentSubCategoryObj?.id, retryToken]);
+
+  const clearFilters = () => {
+    setSelectedCategory("");
+    setSelectedSubCategory("");
+    setSearchDraft("");
+    setSearch("");
+    setPage(1);
+  };
+
+  const visiblePages = Array.from(
+    { length: Math.min(totalPages, 5) },
+    (_, index) => Math.max(1, Math.min(page - 2, totalPages - 4)) + index,
+  );
+
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
-      {/* 1. CP PLUS Dark Top Header with Breadcrumbs */}
-      <div className="relative bg-[#1a1e24] text-white py-10 px-4 sm:px-6">
-        <div className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none" style={{ backgroundImage: `url('/images/og-image.jpg')` }} />
-        <div className="container mx-auto relative z-10 text-center">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-wide">
+      <div className="bg-[#17253d] px-5 py-7 text-white sm:px-8 md:py-8">
+        <div className="mx-auto max-w-7xl">
+          <nav aria-label="Breadcrumb" className="mb-2 flex flex-wrap items-center gap-2 text-xs text-slate-300">
+            <Link href="/" className="hover:text-white">Home</Link>
+            <span aria-hidden="true">/</span>
+            <Link href="/products" onClick={clearFilters} className="hover:text-white">Products</Link>
+            {currentCategoryObj && <><span aria-hidden="true">/</span><span>{currentCategoryObj.name}</span></>}
+            {currentSubCategoryObj && <><span aria-hidden="true">/</span><span>{currentSubCategoryObj.name}</span></>}
+          </nav>
+          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
             {currentSubCategoryObj ? `${currentSubCategoryObj.name} - ${currentCategoryObj?.name}` : currentCategoryObj ? currentCategoryObj.name : "All Products"}
           </h1>
-          {/* Breadcrumbs matching CP PLUS */}
-          <nav className="mt-3 flex items-center justify-center gap-2 text-xs sm:text-sm text-gray-400">
-            <Link href="/" className="hover:text-white transition">Home</Link>
-            <span>/</span>
-            <Link
-              href="/products"
-              onClick={() => { setSelectedCategory(""); setSelectedSubCategory(""); }}
-              className="hover:text-white transition"
-            >
-              Products
-            </Link>
-            {currentCategoryObj && (
-              <>
-                <span>/</span>
-                <span className={currentSubCategoryObj ? "hover:text-white cursor-pointer" : "text-white font-semibold"} onClick={() => setSelectedSubCategory("")}>
-                  {currentCategoryObj.name}
-                </span>
-              </>
-            )}
-            {currentSubCategoryObj && (
-              <>
-                <span>/</span>
-                <span className="text-white font-semibold">{currentSubCategoryObj.name}</span>
-              </>
-            )}
-          </nav>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 items-start">
-          {/* 2. Left Sidebar (CP PLUS Filter By & Category Tree) */}
-          <aside className="border border-gray-200 bg-white rounded-lg shadow-sm p-5 sticky top-24">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400 pb-3 border-b border-gray-100">
-              Filter By
-            </h2>
-
-            {/* Model Number Search Input */}
-            <div className="mt-4">
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                Product
-              </label>
-              <div className="relative">
+      <div className="mx-auto max-w-7xl px-5 py-6 sm:px-8 md:py-8">
+        <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-6">
+          <aside className="rounded-xl border border-slate-200 bg-white p-4 lg:sticky lg:top-24 lg:p-5">
+            <h2 className="text-base font-bold text-[#1b2a4a]">Find products</h2>
+            <form onSubmit={(event) => { event.preventDefault(); setSearch(searchDraft.trim()); setPage(1); }} className="mt-3">
+              <label htmlFor="product-search" className="mb-2 block text-sm font-semibold text-slate-700">Product name</label>
+              <div className="flex gap-2">
                 <input
-                  type="text"
-                  placeholder="Enter Model No."
-                  value={search}
-                  onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                  className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-gray-900 placeholder-gray-400"
+                  id="product-search"
+                  type="search"
+                  placeholder="Search products"
+                  value={searchDraft}
+                  onChange={(event) => setSearchDraft(event.target.value)}
+                  className="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1b2a4a] focus:outline-2 focus:outline-[#1b2a4a]"
                 />
+                <button type="submit" aria-label="Search products" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#1b2a4a] text-white transition hover:bg-[#314c74] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6B00]">
+                  <FiSearch size={18} aria-hidden="true" />
+                </button>
               </div>
-              <button
-                type="button"
-                className="mt-2.5 w-full bg-[#1e2530] text-white text-xs font-bold uppercase tracking-wider py-2 rounded hover:bg-black transition flex items-center justify-center gap-1.5"
-              >
-                <FiSearch size={13} /> FILTER
-              </button>
-            </div>
+            </form>
 
-            {/* Categories Tree */}
-            <div className="mt-6 pt-5 border-t border-gray-100">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-700 mb-3">
-                Categories
-              </h3>
-              <div className="space-y-1">
-                <div className="border-b border-gray-50 pb-1">
+            <div className="mt-4 border-t border-slate-100 pt-3">
+              <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-600">Categories</h3>
+              <select
+                aria-label="Filter by category"
+                value={currentCategoryObj?.id || selectedCategory}
+                onChange={(event) => { setSelectedCategory(event.target.value); setSelectedSubCategory(""); setPage(1); }}
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-[#1b2a4a] lg:hidden"
+              >
+                <option value="">All Categories</option>
+                {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.name} ({cat._count?.products || 0})</option>)}
+              </select>
+              <div className="hidden space-y-1 lg:block">
+                <div className="shrink-0 lg:shrink">
                   <button
                     type="button"
                     onClick={() => { setSelectedCategory(""); setSelectedSubCategory(""); setPage(1); }}
-                    className={`text-xs font-medium py-1.5 w-full text-left transition ${
-                      !selectedCategory ? "text-red-600 font-bold" : "text-gray-700 hover:text-red-600"
+                    aria-pressed={!selectedCategory}
+                    className={`w-full rounded-lg px-3 py-2 text-left text-sm font-semibold transition-colors ${
+                      !selectedCategory ? "bg-[#1b2a4a] text-white" : "text-slate-600 hover:bg-slate-50 hover:text-[#1b2a4a]"
                     }`}
                   >
                     All Categories
@@ -184,181 +212,121 @@ export default function ProductsPage() {
                 {categories.map((cat) => {
                   const isSelected = selectedCategory === cat.id || selectedCategory === cat.slug;
                   return (
-                    <div key={cat.id} className="border-b border-gray-50 last:border-0 pb-1">
-                      <div className="flex items-center justify-between py-1.5">
+                    <div key={cat.id} className="shrink-0 lg:shrink">
+                      <div className="flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => { setSelectedCategory(cat.id); setSelectedSubCategory(""); setPage(1); }}
-                          className={`text-xs font-medium text-left transition-colors ${
-                            isSelected ? "text-red-600 font-bold" : "text-gray-700 hover:text-red-600"
+                          aria-pressed={isSelected}
+                          className={`w-full whitespace-nowrap rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors lg:whitespace-normal ${
+                            isSelected ? "bg-[#1b2a4a] text-white" : "text-slate-600 hover:bg-slate-50 hover:text-[#1b2a4a]"
                           }`}
                         >
-                          {cat.name}
+                          {cat.name} <span className={isSelected ? "text-slate-300" : "text-slate-400"}>({cat._count?.products || 0})</span>
                         </button>
-                        <span className="text-[11px] text-gray-400 font-medium">
-                          ({cat._count?.products || 0})
-                        </span>
                       </div>
-
-                      {/* Subcategories list if category is selected */}
-                      {isSelected && cat.subCategories && cat.subCategories.length > 0 && (
-                        <div className="pl-3.5 pt-1 pb-2 space-y-1.5 border-l-2 border-red-500/20 ml-1">
-                          <button
-                            type="button"
-                            onClick={() => { setSelectedSubCategory(""); setPage(1); }}
-                            className={`flex items-center gap-1.5 text-xs text-left w-full transition ${
-                              !selectedSubCategory ? "text-red-600 font-semibold" : "text-gray-500 hover:text-gray-800"
-                            }`}
-                          >
-                            <span className="text-[10px]">&bull;</span> All {cat.name}
-                          </button>
-                          {cat.subCategories.map((sub) => {
-                            const isSubActive = selectedSubCategory === sub.id || selectedSubCategory === sub.slug;
-                            return (
-                              <button
-                                key={sub.id}
-                                type="button"
-                                onClick={() => { setSelectedSubCategory(sub.id); setPage(1); }}
-                                className={`flex items-center gap-1.5 text-xs text-left w-full transition ${
-                                  isSubActive ? "text-red-600 font-semibold" : "text-gray-500 hover:text-gray-800"
-                                }`}
-                              >
-                                <span className={`text-[10px] ${isSubActive ? "text-red-600" : "text-gray-400"}`}>&bull;</span>
-                                {sub.name}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
                     </div>
                   );
                 })}
               </div>
+              {currentCategoryObj?.subCategories && currentCategoryObj.subCategories.length > 0 && (
+                <div className="mt-4 border-t border-slate-100 pt-4">
+                  <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-600">{currentCategoryObj.name} types</h3>
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" onClick={() => { setSelectedSubCategory(""); setPage(1); }} aria-pressed={!selectedSubCategory} className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${!selectedSubCategory ? "border-[#1b2a4a] bg-[#1b2a4a] text-white" : "border-slate-200 text-slate-600 hover:border-[#1b2a4a]"}`}>All</button>
+                    {currentCategoryObj.subCategories.map((sub) => (
+                      <button key={sub.id} type="button" onClick={() => { setSelectedSubCategory(sub.id); setPage(1); }} aria-pressed={selectedSubCategory === sub.id || selectedSubCategory === sub.slug} className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${selectedSubCategory === sub.id || selectedSubCategory === sub.slug ? "border-[#1b2a4a] bg-[#1b2a4a] text-white" : "border-slate-200 text-slate-600 hover:border-[#1b2a4a]"}`}>{sub.name}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </aside>
 
-          {/* 3. Main Products Listing Grid */}
-          <main>
-            {/* Top Bar matching CP PLUS */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-gray-200 bg-white rounded-lg p-3.5 shadow-sm text-xs text-gray-600">
-              <div className="font-medium text-gray-800">
-                We found <span className="font-bold text-red-600">{totalProducts}</span> items
+          <div className="min-w-0">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-5 py-4">
+              <div>
+                <h2 className="text-lg font-bold text-[#1b2a4a]">{currentSubCategoryObj?.name || currentCategoryObj?.name || "All products"}</h2>
+                <p role="status" className="mt-1 text-sm text-slate-500">{loading ? "Loading products…" : error ? "Products unavailable" : `${totalProducts} ${totalProducts === 1 ? "product" : "products"}${search ? ` matching “${search}”` : ""}`}</p>
               </div>
-              <div className="hidden md:flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-400">
-                <span className="font-semibold text-gray-600">Find by:</span>
-                <span className="hover:text-gray-700 cursor-pointer">Product Series</span> &bull;
-                <span className="hover:text-gray-700 cursor-pointer">Audio</span> &bull;
-                <span className="hover:text-gray-700 cursor-pointer">BodyType</span> &bull;
-                <span className="hover:text-gray-700 cursor-pointer">IR Range</span> &bull;
-                <span className="hover:text-gray-700 cursor-pointer">Resolution</span>
-              </div>
+              {(selectedCategory || selectedSubCategory || search) && (
+                <button type="button" onClick={clearFilters} className="text-sm font-semibold text-[#b94e00] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6B00]">Clear filters</button>
+              )}
             </div>
 
-            {/* Sub-header title */}
-            <div className="mt-4 mb-3 flex items-baseline justify-between">
-              <h2 className="text-base font-bold text-gray-900">
-                Uniworld <span className="text-xs font-normal text-gray-500 ml-1.5">{currentSubCategoryObj?.name || currentCategoryObj?.name || "All Items"}</span>
-              </h2>
-            </div>
-
-            {/* Product Tiles Grid (Exact 3-Column CP PLUS Style Grid) */}
             {loading ? (
-              <div className="border border-gray-200 bg-white rounded-lg p-20 text-center shadow-sm">
-                <div className="h-9 w-9 rounded-full border-3 border-gray-900 border-t-transparent animate-spin mx-auto" />
-                <p className="mt-3 text-xs text-gray-500">Loading products...</p>
+              <div className="rounded-xl border border-slate-200 bg-white px-5 py-16 text-center">
+                <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#FF6B00]" aria-hidden="true" />
+                <p className="mt-3 text-sm text-slate-600">Loading products…</p>
+              </div>
+            ) : error ? (
+              <div role="alert" className="rounded-xl border border-slate-200 bg-white px-5 py-16 text-center">
+                <p className="text-sm font-semibold text-[#1b2a4a]">Products couldn’t be loaded right now.</p>
+                <button type="button" onClick={() => setRetryToken((token) => token + 1)} className="mt-3 text-sm font-semibold text-[#b94e00] hover:underline">Try again</button>
               </div>
             ) : products.length === 0 ? (
-              <div className="border border-gray-200 bg-white rounded-lg p-16 text-center text-gray-500 shadow-sm">
-                <FiCamera size={48} className="mx-auto mb-3 text-gray-300" />
-                <p className="text-sm font-medium">No products found matching your filter.</p>
+              <div className="rounded-xl border border-slate-200 bg-white px-5 py-16 text-center text-slate-600">
+                <FiSearch size={32} className="mx-auto mb-3 text-slate-400" aria-hidden="true" />
+                <p className="text-sm font-medium">No products found{search || selectedCategory ? " for these filters" : " yet"}.</p>
                 {(selectedCategory || selectedSubCategory || search) && (
-                  <button
-                    onClick={() => { setSelectedCategory(""); setSelectedSubCategory(""); setSearch(""); setPage(1); }}
-                    className="mt-3 text-xs text-red-600 font-semibold underline"
-                  >
-                    Clear all filters
-                  </button>
+                  <button type="button" onClick={clearFilters} className="mt-3 text-sm font-semibold text-[#b94e00] hover:underline">Clear all filters</button>
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 border-t border-l border-gray-200 bg-white shadow-sm rounded-lg overflow-hidden">
-                {products.map((product, idx) => (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {products.map((product) => (
                   <Link
                     key={product.id}
                     href={`/products/${product.slug}`}
-                    className="group relative flex flex-col items-center justify-between border-r border-b border-gray-200 p-6 text-center transition-all duration-200 hover:shadow-lg hover:z-10 bg-white"
+                    className="group flex min-w-0 flex-col rounded-xl border border-slate-200 bg-white p-3 transition-shadow hover:border-slate-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6B00]"
                   >
-                    {/* Red New Ribbon */}
-                    {(idx < 3 || product.isFeatured) && (
-                      <div className="absolute -left-12 top-3.5 z-20 w-32 -rotate-45 bg-[#e52d27] py-0.5 text-center shadow-sm pointer-events-none">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-white">
-                          New
-                        </span>
+                    <ProductImage src={product.images?.[0]?.url} name={product.name} />
+                    <div className="flex flex-1 flex-col px-2 pb-2 pt-4">
+                      <div className="mb-2 flex items-center justify-between gap-2 text-[11px] font-bold uppercase tracking-wide text-[#b94e00]">
+                        <span className="truncate">{product.category?.name}</span>
+                        {product.isFeatured && <span className="shrink-0 rounded-full bg-[#fff4ec] px-2 py-1 text-[10px] normal-case tracking-normal">Featured</span>}
                       </div>
-                    )}
-
-                    {/* Product Image Area */}
-                    <div className="relative h-[160px] w-full flex items-center justify-center">
-                      {product.images[0]?.url ? (
-                        <Image
-                          src={product.images[0].url}
-                          alt={product.name}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
-                          className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <FiCamera size={44} className="text-gray-300" />
-                      )}
-                    </div>
-
-                    {/* Product Name (Bold CP PLUS Model Code Style) */}
-                    <div className="mt-4 w-full">
-                      <h3 className="text-[14px] font-semibold text-gray-800 leading-snug line-clamp-2 transition-colors group-hover:text-blue-600">
-                        {product.name}
-                      </h3>
-
-                      {/* Subtitle / Description */}
-                      <p className="mt-1.5 text-[11px] text-gray-500 leading-normal line-clamp-2">
-                        {product.description || (product.subCategory?.name ? `${product.subCategory.name} Camera` : product.category?.name)}
-                      </p>
-
-                      {/* Price (if applicable) */}
+                      <h3 className="line-clamp-2 text-base font-bold leading-6 text-[#1b2a4a]">{product.name}</h3>
+                      {product.description && <p className="mt-2 line-clamp-2 text-sm leading-5 text-slate-600">{product.description}</p>}
                       {product.price > 0 && (
-                        <div className="mt-2 text-xs font-bold text-gray-900">
+                        <div className="mt-3 text-sm font-bold text-[#1b2a4a]">
                           ₹{product.price.toLocaleString()}
                           {product.mrp && product.mrp > product.price && (
-                            <span className="ml-2 text-[10px] font-normal text-gray-400 line-through">
+                            <span className="ml-2 text-xs font-normal text-slate-400 line-through">
                               ₹{product.mrp.toLocaleString()}
                             </span>
                           )}
                         </div>
                       )}
+                      <div className="mt-auto pt-4">
+                        <span className="flex items-center gap-1 border-t border-slate-100 pt-3 text-sm font-bold text-[#b94e00] group-hover:text-[#e95f00]">View details <FiArrowRight size={16} aria-hidden="true" /></span>
+                      </div>
                     </div>
                   </Link>
                 ))}
               </div>
             )}
 
-            {/* Pagination matching CP PLUS */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-1.5 mt-8">
+            {!loading && !error && totalPages > 1 && (
+              <nav aria-label="Product pages" className="mt-6 flex flex-wrap items-center justify-center gap-2">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                  className="flex min-h-10 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 hover:border-[#1b2a4a] disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  <FiChevronLeft size={14} /> Prev
+                  <FiChevronLeft size={16} aria-hidden="true" /> Previous
                 </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                {visiblePages.map((pageNum) => (
                   <button
                     key={pageNum}
                     onClick={() => setPage(pageNum)}
-                    className={`w-8 h-8 rounded text-xs font-bold transition ${
+                    aria-label={`Page ${pageNum}`}
+                    aria-current={page === pageNum ? "page" : undefined}
+                    className={`h-10 w-10 rounded-lg text-sm font-bold transition ${
                       page === pageNum
-                        ? "bg-[#1e2530] text-white shadow-sm"
-                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                        ? "bg-[#1b2a4a] text-white"
+                        : "border border-slate-200 bg-white text-slate-700 hover:border-[#1b2a4a]"
                     }`}
                   >
                     {pageNum}
@@ -368,13 +336,13 @@ export default function ProductsPage() {
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                  className="flex min-h-10 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 hover:border-[#1b2a4a] disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Next <FiChevronRight size={14} />
+                  Next <FiChevronRight size={16} aria-hidden="true" />
                 </button>
-              </div>
+              </nav>
             )}
-          </main>
+          </div>
         </div>
       </div>
     </div>
