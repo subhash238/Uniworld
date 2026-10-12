@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1B2A4A;
+  --color-primary-dark: #0F1E36;
+  --color-primary-light: #314C74;
+  --color-accent: #FF6B00;
+  --color-accent-soft: #FFF4EC;
+  --color-surface: #F8F9FA;
+  --font-poppins: 'Manrope', sans-serif;
+}
+
+:root {
+  --primary: #1B2A4A;
+  --primary-dark: #0F1E36;
+  --primary-light: #314C74;
+  --secondary: #FF6B00;
+  --accent: #FF6B00;
+  --dark: #1B2A4A;
+  --surface: #F8F9FA;
+  --base: #FFFFFF;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255, 107, 0, 0.08), transparent 22%),
+    linear-gradient(180deg, #f8f9fa 0%, #eef3f8 100%);
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Manrope', sans-serif;
+  letter-spacing: -0.03em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(255, 107, 0, 0.18);
+  color: #0f172a;
+}
+
+a:focus-visible {
+  outline: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@layer components {
+  .section-shell {
+    @apply relative overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.06)];
+  }
+
+  .section-eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-[#FF6B00]/20 bg-[#FFF4EC] px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#1B2A4A];
+  }
+
+  .premium-button-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-[#FF6B00] px-6 py-3 text-sm font-bold text-white shadow-[0_18px_30px_rgba(255,107,0,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#e95f00] hover:shadow-[0_24px_38px_rgba(255,107,0,0.34)];
+  }
+
+  .premium-button-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-[#1B2A4A] shadow-[0_10px_25px_rgba(15,23,42,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#FF6B00]/30 hover:text-[#FF6B00] hover:shadow-[0_18px_30px_rgba(15,23,42,0.08)];
+  }
+
+  .luxury-card {
+    @apply rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_48px_rgba(15,23,42,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_rgba(15,23,42,0.10)];
+  }
+}
+
