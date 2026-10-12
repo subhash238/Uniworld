@@ -149,7 +149,7 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
-      <div className="bg-[#17253d] px-5 py-7 text-white sm:px-8 md:py-8">
+      <div className="bg-[#17253d]  text-white  py-10 px-4 sm:px-6">
         <div className="mx-auto max-w-7xl">
           <nav aria-label="Breadcrumb" className="mb-2 flex flex-wrap items-center gap-2 text-xs text-slate-300">
             <Link href="/" className="hover:text-white">Home</Link>
