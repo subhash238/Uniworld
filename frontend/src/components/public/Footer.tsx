@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { FiPhone, FiMail, FiMapPin, FiArrowUpRight, FiMessageSquare, FiPenTool } from "react-icons/fi";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 import api from "@/lib/api";
+import { contactDetails } from "@/lib/contactDetails";
 
 interface Category {
   id: string;
@@ -14,6 +16,7 @@ interface Category {
 }
 
 export default function Footer() {
+  const pathname = usePathname();
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -24,7 +27,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#172027] text-slate-300">
-      <section className="border-y border-slate-200 bg-[#f1f3f4] text-[#243240]">
+      {pathname !== "/contact" && <section className="border-y border-slate-200 bg-[#f1f3f4] text-[#243240]">
         <div className="container mx-auto px-4 py-8 sm:px-6 md:py-10">
           <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -35,20 +38,20 @@ export default function Footer() {
           </div>
 
           <div className="grid grid-cols-1 divide-y divide-slate-200 sm:grid-cols-2 sm:divide-y-0 xl:grid-cols-4">
-            <a href="tel:+917360000121" className="group flex min-h-[82px] items-center gap-4 px-2 py-4 sm:border-r sm:border-slate-200 sm:px-4 xl:pl-0">
+            <a href={contactDetails.phoneHref} className="group flex min-h-[82px] items-center gap-4 px-2 py-4 sm:border-r sm:border-slate-200 sm:px-4 xl:pl-0">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center text-[#c76a36]"><FiPhone size={21} /></span>
               <span className="min-w-0 flex-1">
                 <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">Call our team</span>
-                <span className="mt-1 block text-sm font-semibold text-[#172b42] group-hover:text-[#c76a36]">+91 73600 00121</span>
+                <span className="mt-1 block text-sm font-semibold text-[#172b42] group-hover:text-[#c76a36]">{contactDetails.phone}</span>
               </span>
               <FiArrowUpRight className="shrink-0 text-slate-400 transition-colors group-hover:text-[#c76a36]" size={16} />
             </a>
 
-            <a href="mailto:info@uniworldvision.com" className="group flex min-h-[82px] items-center gap-4 px-2 py-4 sm:border-r sm:border-slate-200 sm:px-4 xl:pl-6">
+            <a href={`mailto:${contactDetails.email}`} className="group flex min-h-[82px] items-center gap-4 px-2 py-4 sm:border-r sm:border-slate-200 sm:px-4 xl:pl-6">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center text-[#c76a36]"><FiMail size={21} /></span>
               <span className="min-w-0 flex-1">
                 <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">Email enquiries</span>
-                <span className="mt-1 block truncate text-sm font-semibold text-[#172b42] group-hover:text-[#c76a36]">info@uniworldvision.com</span>
+                <span className="mt-1 block truncate text-sm font-semibold text-[#172b42] group-hover:text-[#c76a36]">{contactDetails.email}</span>
               </span>
               <FiArrowUpRight className="shrink-0 text-slate-400 transition-colors group-hover:text-[#c76a36]" size={16} />
             </a>
@@ -62,7 +65,7 @@ export default function Footer() {
               <FiArrowUpRight className="shrink-0 text-slate-400 transition-colors group-hover:text-[#c76a36]" size={16} />
             </Link>
 
-            <a href="https://wa.me/917360000121?text=Hello%20Uniworld" target="_blank" rel="noopener noreferrer" className="group flex min-h-[82px] items-center gap-4 px-2 py-4 sm:px-4 xl:pl-6">
+            <a href={contactDetails.whatsappHref} target="_blank" rel="noopener noreferrer" className="group flex min-h-[82px] items-center gap-4 px-2 py-4 sm:px-4 xl:pl-6">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center text-[#c76a36]"><FiMessageSquare size={21} /></span>
               <span className="min-w-0 flex-1">
                 <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">WhatsApp support</span>
@@ -72,7 +75,7 @@ export default function Footer() {
             </a>
           </div>
         </div>
-      </section>
+      </section>}
 
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid gap-8 py-10 sm:grid-cols-2 sm:gap-8 md:py-12 lg:grid-cols-[1.3fr_0.8fr_0.9fr_1.2fr] lg:gap-8 lg:py-14">
@@ -115,18 +118,14 @@ export default function Footer() {
           <div>
             <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-white">Visit Uniworld</h3>
             <ul className="space-y-4 text-sm leading-5 text-slate-400">
-              <li className="flex items-start gap-3">
-                <FiMapPin className="mt-0.5 shrink-0 text-[#f3a15e]" />
-                <a href="https://www.google.com/maps/search/?api=1&query=Uniworld+Head+Office+Road+No+3+Azad+Nagar+Kankarbagh+Patna+800020" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
-                  Head Office<br />Road No. 3, Azad Nagar, Kankarbagh, Patna 800020
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <FiMapPin className="mt-0.5 shrink-0 text-[#f3a15e]" />
-                <a href="https://www.google.com/maps?q=28.5338551,77.2698201" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
-                  Delhi Office<br />39, FIEE Complex, Govindpuri, South East Delhi, Delhi 110020
-                </a>
-              </li>
+              {contactDetails.offices.map((office) => (
+                <li key={office.name} className="flex items-start gap-3">
+                  <FiMapPin className="mt-0.5 shrink-0 text-[#f3a15e]" aria-hidden="true" />
+                  <a href={office.mapsHref} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
+                    {office.name}<br />{office.address}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
