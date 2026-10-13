@@ -585,6 +585,13 @@ export default function Navbar() {
               </Link>
 
               <Link
+                href="/gallery"
+                className="relative py-4 text-[15px] font-medium text-[#3c444b] transition-colors after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-[#e31e24] after:transition-transform hover:text-[#e31e24] hover:after:scale-x-100"
+              >
+                Gallery
+              </Link>
+
+              <Link
                 href="/products"
                 className="flex h-10 w-10 shrink-0 items-center justify-center text-[#303941] transition-colors hover:text-[#e31e24]"
                 aria-label="Search products"
@@ -722,6 +729,13 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
               >
                 Contact
+              </Link>
+              <Link
+                href="/gallery"
+                className="block border-b border-white/10 px-3 py-3 text-sm font-semibold text-white/85 transition-colors hover:text-[#f5a55f]"
+                onClick={() => setIsOpen(false)}
+              >
+                Gallery
               </Link>
             </div>
           )}
