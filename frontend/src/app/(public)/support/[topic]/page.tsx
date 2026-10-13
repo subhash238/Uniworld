@@ -11,6 +11,7 @@ import {
   type SupportDownload,
 } from "@/lib/supportLinks";
 import DownloadSections from "./DownloadSections";
+import HddBandwidthCalculator from "./HddBandwidthCalculator";
 
 interface Props {
   params: Promise<{ topic: string }>;
@@ -109,6 +110,9 @@ export default async function SupportTopicPage({ params }: Props) {
           </div>
         </aside>
 
+        {link.slug === "hdd-bandwidth-calculator" ? (
+          <HddBandwidthCalculator />
+        ) : (
         <div className="space-y-6">
         {downloads.length > 0 && <DownloadSections items={downloads} />}
 
@@ -151,6 +155,7 @@ export default async function SupportTopicPage({ params }: Props) {
           </Link>
         </section>
         </div>
+        )}
       </div>
     </div>
   );
