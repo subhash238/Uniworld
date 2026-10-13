@@ -33,6 +33,7 @@ const getPublicDownloads = async (req, res) => {
     });
     res.json(items);
   } catch (error) {
+    console.error("getPublicDownloads:", error);
     res.status(500).json({ message: "Failed to load downloads" });
   }
 };
@@ -42,6 +43,7 @@ const getDownloads = async (req, res) => {
     const items = await prisma.supportDownload.findMany({ orderBy: [{ type: "asc" }, ...orderBy] });
     res.json(items);
   } catch (error) {
+    console.error("getPublicDownloads:", error);
     res.status(500).json({ message: "Failed to load downloads" });
   }
 };
@@ -79,6 +81,7 @@ const createDownload = async (req, res) => {
     res.status(201).json({ message: "Download created", item });
   } catch (error) {
     if (uploadedPublicId) await removeFile(uploadedPublicId);
+    console.error("createDownload:", error);
     res.status(500).json({ message: "Failed to create download" });
   }
 };
@@ -127,6 +130,7 @@ const updateDownload = async (req, res) => {
     res.json({ message: "Download updated", item });
   } catch (error) {
     if (uploadedPublicId) await removeFile(uploadedPublicId);
+    console.error("updateDownload:", error);
     res.status(500).json({ message: "Failed to update download" });
   }
 };
@@ -140,6 +144,7 @@ const deleteDownload = async (req, res) => {
     await removeFile(item.publicId);
     res.json({ message: "Download deleted" });
   } catch (error) {
+    console.error("deleteDownload:", error);
     res.status(500).json({ message: "Failed to delete download" });
   }
 };
