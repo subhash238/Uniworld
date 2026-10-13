@@ -21,6 +21,7 @@ import {
   FaXTwitter,
   FaWhatsapp,
 } from "react-icons/fa6";
+import { supportGroups, supportHref } from "@/lib/supportLinks";
 
 interface SubCategory {
   id: string;
@@ -151,8 +152,13 @@ export default function Navbar() {
   const [showMegaMenu, setShowMegaMenu] = useState(false);
   const [activeCategoryId, setActiveCategoryId] = useState<string>(defaultCategories[0].id);
 
+  const [showSupportMenu, setShowSupportMenu] = useState(false);
+  const [showMobileSupport, setShowMobileSupport] = useState(false);
+
   const megaMenuTimeout = useRef<NodeJS.Timeout | null>(null);
   const megaMenuContainerRef = useRef<HTMLDivElement>(null);
+  const supportMenuTimeout = useRef<NodeJS.Timeout | null>(null);
+  const supportMenuContainerRef = useRef<HTMLDivElement>(null);
 
   // Load categories from backend API
   useEffect(() => {
@@ -184,11 +190,18 @@ export default function Navbar() {
       ) {
         setShowMegaMenu(false);
       }
+      if (
+        supportMenuContainerRef.current &&
+        !supportMenuContainerRef.current.contains(event.target as Node)
+      ) {
+        setShowSupportMenu(false);
+      }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setShowMegaMenu(false);
+        setShowSupportMenu(false);
       }
     };
 
@@ -221,6 +234,17 @@ export default function Navbar() {
   const closeMegaMenu = useCallback(() => {
     setShowMegaMenu(false);
   }, []);
+
+  const handleSupportMouseEnter = () => {
+    if (supportMenuTimeout.current) clearTimeout(supportMenuTimeout.current);
+    setShowSupportMenu(true);
+  };
+
+  const handleSupportMouseLeave = () => {
+    supportMenuTimeout.current = setTimeout(() => {
+      setShowSupportMenu(false);
+    }, 200);
+  };
 
   // Determine active category
   const activeCat = categories.find((c) => c.id === activeCategoryId) || categories[0];
@@ -334,7 +358,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden items-center gap-7 xl:flex 2xl:gap-9">
+            <div className="relative hidden items-center gap-7 xl:flex 2xl:gap-9">
               <Link
                 href="/"
                 className="relative py-4 text-[15px] font-medium text-[#3c444b] transition-colors after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-[#e31e24] after:transition-transform hover:text-[#e31e24] hover:after:scale-x-100"
@@ -493,12 +517,60 @@ export default function Navbar() {
               >
                 Dealers
               </Link>
-              <Link
-                href="/support"
-                className="relative py-4 text-[15px] font-medium text-[#3c444b] transition-colors after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-[#e31e24] after:transition-transform hover:text-[#e31e24] hover:after:scale-x-100"
+              {/* SUPPORT - CP PLUS STYLE DROPDOWN (positioned against the nav links row) */}
+              <div
+                ref={supportMenuContainerRef}
+                onMouseEnter={handleSupportMouseEnter}
+                onMouseLeave={handleSupportMouseLeave}
               >
-                Support
-              </Link>
+                <Link
+                  href="/support"
+                  onClick={() => setShowSupportMenu(false)}
+                  onFocus={handleSupportMouseEnter}
+                  className={`group relative flex items-center gap-1.5 py-4 text-[15px] font-medium transition-colors ${
+                    showSupportMenu ? "text-[#e31e24]" : "text-[#3c444b] hover:text-[#e31e24]"
+                  }`}
+                  aria-expanded={showSupportMenu}
+                  aria-haspopup="true"
+                >
+                  <span>Support</span>
+                  <FiChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 ${
+                      showSupportMenu ? "rotate-180 text-[#e31e24]" : "text-gray-500 group-hover:text-[#e31e24]"
+                    }`}
+                  />
+                </Link>
+
+                {showSupportMenu && (
+                  <div className="absolute right-0 top-full z-50 pt-[10px]">
+                    <div className="w-[760px] max-w-[calc(100vw-40px)] border-t-[3px] border-[#e31e24] bg-white px-7 py-6 shadow-[0_25px_60px_rgba(0,0,0,0.18)] animate-fadeIn">
+                      <div className="grid grid-cols-4 gap-8">
+                        {supportGroups.map((group) => (
+                          <div key={group.title}>
+                            <h3 className="mb-2 text-[15px] font-bold tracking-tight text-gray-900">
+                              {group.title}
+                            </h3>
+                            <ul className="space-y-1.5">
+                              {group.links.map((link) => (
+                                <li key={link.slug}>
+                                  <Link
+                                    href={supportHref(link.slug)}
+                                    onClick={() => setShowSupportMenu(false)}
+                                    className="block text-[13.5px] leading-snug text-[#4b5563] transition-colors hover:text-[#e31e24]"
+                                  >
+                                    {link.title}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               <Link
                 href="/contact"
                 className="relative py-4 text-[15px] font-medium text-[#3c444b] transition-colors after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:scale-x-0 after:bg-[#e31e24] after:transition-transform hover:text-[#e31e24] hover:after:scale-x-100"
@@ -604,13 +676,46 @@ export default function Navbar() {
               >
                 Dealers
               </Link>
-              <Link
-                href="/support"
-                className="block border-b border-white/10 px-3 py-3 text-sm font-semibold text-white/85 transition-colors hover:text-[#f5a55f]"
-                onClick={() => setIsOpen(false)}
+              <button
+                type="button"
+                onClick={() => setShowMobileSupport((visible) => !visible)}
+                className="flex w-full items-center justify-between border-b border-white/10 px-3 py-3 text-left text-sm font-semibold text-white/85 transition-colors hover:text-[#f5a55f]"
+                aria-expanded={showMobileSupport}
               >
                 Support
-              </Link>
+                <FiChevronDown
+                  size={14}
+                  className={`transition-transform ${showMobileSupport ? "rotate-180" : ""}`}
+                />
+              </button>
+              {showMobileSupport && (
+                <div className="space-y-3 border-l border-[#e31e24]/60 py-2 pl-4">
+                  <Link
+                    href="/support"
+                    className="block py-1 text-sm font-semibold text-white transition-colors hover:text-[#f5a55f]"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Support home
+                  </Link>
+                  {supportGroups.map((group) => (
+                    <div key={group.title}>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#f5a55f]">
+                        {group.title}
+                      </p>
+                      {group.links.map((link) => (
+                        <Link
+                          key={link.slug}
+                          href={supportHref(link.slug)}
+                          className="block py-1.5 text-sm text-slate-300 transition-colors hover:text-[#f5a55f]"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {link.title}
+                        </Link>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
               <Link
                 href="/contact"
                 className="block border-b border-white/10 px-3 py-3 text-sm font-semibold text-white/85 transition-colors hover:text-[#f5a55f]"
