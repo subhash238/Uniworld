@@ -186,3 +186,15 @@ model SupportDownload {
 
   @@index([type, isActive])
 }
+
+model GalleryItem {
+  id        String   @id @default(uuid())
+  title     String
+  mediaType String // "image" or "video"
+  fileUrl   String
+  publicId  String
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

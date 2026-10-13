@@ -14,6 +14,7 @@ const dealerRoutes = require("./routes/dealerRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const offerRoutes = require("./routes/offerRoutes");
 const supportDownloadRoutes = require("./routes/supportDownloadRoutes");
+const galleryRoutes = require("./routes/galleryRoutes");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use("/api/dealers", dealerRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/offers", offerRoutes);
 app.use("/api/support-downloads", supportDownloadRoutes);
+app.use("/api/gallery", galleryRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
