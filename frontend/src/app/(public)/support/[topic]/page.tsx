@@ -22,7 +22,7 @@ async function getDownloads(type: string): Promise<SupportDownload[]> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
     const res = await fetch(`${apiUrl}/support-downloads/public?type=${encodeURIComponent(type)}`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) return [];
     const data = await res.json();
