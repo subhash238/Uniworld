@@ -56,3 +56,23 @@ export function findSupportLink(slug: string) {
   }
   return null;
 }
+
+export const downloadTypes = supportGroups.find((group) => group.title === "Download")?.links ?? [];
+
+export const isDownloadType = (slug: string) => downloadTypes.some((link) => link.slug === slug);
+
+export interface SupportDownload {
+  id: string;
+  title: string;
+  type: string;
+  section: string;
+  fileUrl: string;
+  fileName: string;
+  fileSize: number;
+}
+
+export function formatFileSize(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}

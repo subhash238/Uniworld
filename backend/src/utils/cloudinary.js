@@ -3,12 +3,14 @@ const cloudinary = require("../config/cloudinary");
 const uploadToCloudinary = (
   fileBuffer,
   folder = "uniworld",
-  resourceType = "image"
+  resourceType = "image",
+  extraOptions = {}
 ) => {
   return new Promise((resolve, reject) => {
     const options = {
       folder,
       resource_type: resourceType,
+      ...extraOptions,
     };
 
     const stream = cloudinary.uploader.upload_stream(
@@ -23,8 +25,8 @@ const uploadToCloudinary = (
   });
 };
 
-const deleteFromCloudinary = async (publicId) => {
-  return cloudinary.uploader.destroy(publicId);
+const deleteFromCloudinary = async (publicId, resourceType = "image") => {
+  return cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
 };
 
 module.exports = { uploadToCloudinary, deleteFromCloudinary };
