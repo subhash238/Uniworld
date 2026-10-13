@@ -26,4 +26,9 @@ const uploadPdf = multer({
   },
 });
 
-module.exports = { upload, uploadPdf };
+const uploadDownload = multer({
+  storage,
+  limits: { fileSize: 50 * 1024 * 1024 },
+});
+
+module.exports = { upload, uploadPdf, uploadDownload };

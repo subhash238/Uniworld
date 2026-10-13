@@ -13,6 +13,7 @@ const pressRoutes = require("./routes/pressRoutes");
 const dealerRoutes = require("./routes/dealerRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const offerRoutes = require("./routes/offerRoutes");
+const supportDownloadRoutes = require("./routes/supportDownloadRoutes");
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/api/press", pressRoutes);
 app.use("/api/dealers", dealerRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/offers", offerRoutes);
+app.use("/api/support-downloads", supportDownloadRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
@@ -41,6 +43,9 @@ app.get("/api/health", (req, res) => {
 
 // Error handler
 app.use((err, req, res, next) => {
+  if (err.code === "LIMIT_FILE_SIZE") {
+    return res.status(413).json({ message: "File is too large" });
+  }
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!", error: err.message });
 });

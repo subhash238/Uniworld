@@ -3,13 +3,34 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FiArrowRight, FiMail, FiMessageCircle } from "react-icons/fi";
 import { contactDetails } from "@/lib/contactDetails";
-import { findSupportLink, supportGroups, supportHref } from "@/lib/supportLinks";
+import {
+  findSupportLink,
+  isDownloadType,
+  supportGroups,
+  supportHref,
+  type SupportDownload,
+} from "@/lib/supportLinks";
+import DownloadSections from "./DownloadSections";
 
 interface Props {
   params: Promise<{ topic: string }>;
 }
 
 export const dynamicParams = false;
+
+async function getDownloads(type: string): Promise<SupportDownload[]> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    const res = await fetch(`${apiUrl}/support-downloads/public?type=${encodeURIComponent(type)}`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
 
 export function generateStaticParams() {
   return supportGroups.flatMap((group) => group.links.map((link) => ({ topic: link.slug })));
@@ -33,6 +54,7 @@ export default async function SupportTopicPage({ params }: Props) {
   if (!match) notFound();
 
   const { group, link } = match;
+  const downloads = isDownloadType(link.slug) ? await getDownloads(link.slug) : [];
   const whatsappHref = `https://wa.me/917360000121?text=${encodeURIComponent(
     `Hello Uniworld, I need ${link.title} for model: `
   )}`;
@@ -87,13 +109,22 @@ export default async function SupportTopicPage({ params }: Props) {
           </div>
         </aside>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="support-topic-heading">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#e31e24]">{group.title}</p>
-          <h2 id="support-topic-heading" className="mt-1 text-xl font-bold text-[#1b2a4a] sm:text-2xl">{link.title}</h2>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">{link.description}</p>
+        <div className="space-y-6">
+        {downloads.length > 0 && <DownloadSections items={downloads} />}
 
-          <div className="mt-6 rounded-lg border border-dashed border-slate-300 bg-[#f7f9fc] p-5">
-            <h3 className="text-base font-bold text-[#1b2a4a]">Get it from our support team</h3>
+        <section className="rounded-xl border border-slate-200 bg-white p-5 sm:p-7" aria-labelledby="support-topic-heading">
+          {downloads.length === 0 && (
+            <>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#e31e24]">{group.title}</p>
+              <h2 id="support-topic-heading" className="mt-1 text-xl font-bold text-[#1b2a4a] sm:text-2xl">{link.title}</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">{link.description}</p>
+            </>
+          )}
+
+          <div className={`${downloads.length === 0 ? "mt-6 " : ""}rounded-lg border border-dashed border-slate-300 bg-[#f7f9fc] p-5`}>
+            <h3 id={downloads.length > 0 ? "support-topic-heading" : undefined} className="text-base font-bold text-[#1b2a4a]">
+              {downloads.length > 0 ? "Can't find what you need?" : "Get it from our support team"}
+            </h3>
             <p className="mt-1 text-sm leading-6 text-slate-600">
               Share your product model number and our team will send you the right {link.title.toLowerCase()} resources.
             </p>
@@ -119,6 +150,7 @@ export default async function SupportTopicPage({ params }: Props) {
             Back to support <FiArrowRight size={15} aria-hidden="true" />
           </Link>
         </section>
+        </div>
       </div>
     </div>
   );

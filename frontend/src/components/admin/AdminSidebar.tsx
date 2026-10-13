@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { FiHome, FiBox, FiGrid, FiShoppingCart, FiImage, FiUsers, FiMail, FiLogOut, FiMenu, FiX, FiLayers, FiFileText, FiTag } from "react-icons/fi";
+import { FiHome, FiBox, FiGrid, FiShoppingCart, FiImage, FiUsers, FiMail, FiLogOut, FiMenu, FiX, FiLayers, FiFileText, FiTag, FiDownload } from "react-icons/fi";
 import { useState, useEffect } from "react";
 
 const navItems = [
@@ -14,6 +14,7 @@ const navItems = [
   { href: "/admin/offers", icon: FiTag, label: "We Offer" },
   { href: "/admin/banners", icon: FiImage, label: "Banners" },
   { href: "/admin/press", icon: FiFileText, label: "Print & Press" },
+  { href: "/admin/downloads", icon: FiDownload, label: "Support Downloads" },
   { href: "/admin/orders", icon: FiShoppingCart, label: "Orders" },
   { href: "/admin/dealers", icon: FiUsers, label: "Dealers" },
   { href: "/admin/inquiries", icon: FiMail, label: "Inquiries" },

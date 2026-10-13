@@ -169,3 +169,20 @@ model OfferItem {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model SupportDownload {
+  id        String   @id @default(uuid())
+  title     String
+  type      String // support topic slug, e.g. "certificate", "firmware"
+  section   String // heading on the public page, e.g. "CE/FCC/RoHS Certificates"
+  fileUrl   String
+  publicId  String
+  fileName  String
+  fileSize  Int
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type, isActive])
+}
