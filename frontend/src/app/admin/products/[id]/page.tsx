@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
-import { FiUpload, FiFile, FiTrash2, FiX } from "react-icons/fi";
+import { FiUpload, FiFile, FiTrash2, FiX, FiStar } from "react-icons/fi";
 
 interface SubCategory {
   id: string;
@@ -170,6 +170,28 @@ export default function EditProductPage() {
         },
       },
     );
+  };
+
+  const deleteExistingImage = async (imageId: string) => {
+    if (!confirm("Delete this image?")) return;
+    try {
+      const res = await api.delete(`/products/${params.id}/images/${imageId}`);
+      setImages(res.data.product?.images || images.filter((i) => i.id !== imageId));
+      toast.success("Image deleted");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to delete image");
+    }
+  };
+
+  const setPrimaryImage = async (imageId: string) => {
+    try {
+      const res = await api.put(`/products/${params.id}/images/${imageId}/primary`);
+      if (res.data.product?.images) setImages(res.data.product.images);
+      else setImages(images.map((i) => ({ ...i, isPrimary: i.id === imageId })));
+      toast.success("Primary image updated");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to set primary");
+    }
   };
 
   const uploadDatasheet = async () => {
@@ -415,15 +437,36 @@ export default function EditProductPage() {
             {images.map((img) => (
               <div
                 key={img.id}
-                className="relative w-24 h-24 border rounded overflow-hidden"
+                className={`group relative w-24 h-24 border-2 rounded overflow-hidden ${img.isPrimary ? "border-primary" : "border-gray-200"}`}
               >
                 <img src={img.url} className="w-full h-full object-cover" />
 
                 {img.isPrimary && (
-                  <span className="absolute bottom-0 left-0 bg-black text-white text-xs px-1">
+                  <span className="absolute bottom-0 left-0 right-0 bg-primary text-white text-[10px] font-semibold text-center py-0.5">
                     Primary
                   </span>
                 )}
+
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-1.5">
+                  {!img.isPrimary && (
+                    <button
+                      type="button"
+                      onClick={() => setPrimaryImage(img.id)}
+                      title="Set as primary"
+                      className="bg-white/90 text-yellow-600 rounded-full w-6 h-6 flex items-center justify-center hover:bg-white"
+                    >
+                      <FiStar size={13} />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => deleteExistingImage(img.id)}
+                    title="Delete image"
+                    className="bg-white/90 text-red-600 rounded-full w-6 h-6 flex items-center justify-center hover:bg-white"
+                  >
+                    <FiTrash2 size={13} />
+                  </button>
+                </div>
               </div>
             ))}
 

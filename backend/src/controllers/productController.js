@@ -197,11 +197,42 @@ const deleteProductImage = async (req, res) => {
   try {
     const image = await prisma.productImage.findUnique({ where: { id: req.params.imageId } });
     if (!image) return res.status(404).json({ message: "Image not found" });
+    if (image.productId !== req.params.id) return res.status(400).json({ message: "Image does not belong to this product" });
 
     await deleteFromCloudinary(image.publicId);
     await prisma.productImage.delete({ where: { id: req.params.imageId } });
 
-    res.json({ message: "Image deleted" });
+    // Keep exactly one primary: if the deleted image was primary, promote the first remaining one
+    if (image.isPrimary) {
+      const next = await prisma.productImage.findFirst({
+        where: { productId: req.params.id },
+        orderBy: { id: "asc" },
+      });
+      if (next) {
+        await prisma.productImage.update({ where: { id: next.id }, data: { isPrimary: true } });
+      }
+    }
+
+    const product = await prisma.product.findUnique({ where: { id: req.params.id }, include: { images: true } });
+    res.json({ message: "Image deleted", product });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+const setPrimaryImage = async (req, res) => {
+  try {
+    const image = await prisma.productImage.findUnique({ where: { id: req.params.imageId } });
+    if (!image) return res.status(404).json({ message: "Image not found" });
+    if (image.productId !== req.params.id) return res.status(400).json({ message: "Image does not belong to this product" });
+
+    await prisma.$transaction([
+      prisma.productImage.updateMany({ where: { productId: req.params.id }, data: { isPrimary: false } }),
+      prisma.productImage.update({ where: { id: req.params.imageId }, data: { isPrimary: true } }),
+    ]);
+
+    const product = await prisma.product.findUnique({ where: { id: req.params.id }, include: { images: true } });
+    res.json({ message: "Primary image updated", product });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -257,6 +288,6 @@ const deleteDatasheet = async (req, res) => {
 
 module.exports = {
   createProduct, getProducts, getPublicProducts, getProductBySlug,
-  updateProduct, addProductImages, deleteProductImage, deleteProduct,
+  updateProduct, addProductImages, deleteProductImage, setPrimaryImage, deleteProduct,
   uploadDatasheet, deleteDatasheet,
 };

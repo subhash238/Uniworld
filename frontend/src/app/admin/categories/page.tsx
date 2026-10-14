@@ -86,6 +86,19 @@ export default function AdminCategoriesPage() {
     }
   };
 
+  const removeImage = async () => {
+    if (!editingId || !confirm("Remove this category image?")) return;
+    try {
+      await api.delete(`/categories/${editingId}/image`);
+      setPreviewImage("");
+      setImage(null);
+      toast.success("Image removed");
+      loadCategories();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to remove image");
+    }
+  };
+
   const editCategory = (cat: Category) => {
     setEditingId(cat.id);
 
@@ -196,11 +209,22 @@ export default function AdminCategoriesPage() {
           <div className="flex items-center gap-4">
             <div>
               {previewImage && (
-                <img
-                  src={previewImage}
-                  alt="preview"
-                  className="w-20 h-28 object-cover rounded-lg border mb-2 shadow-sm"
-                />
+                <div>
+                  <img
+                    src={previewImage}
+                    alt="preview"
+                    className="w-20 h-28 object-cover rounded-lg border mb-2 shadow-sm"
+                  />
+                  {editingId && !image && (
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="flex items-center gap-1 text-xs text-red-600 hover:text-red-800 font-medium"
+                    >
+                      <FiTrash2 size={12} /> Remove image
+                    </button>
+                  )}
+                </div>
               )}
 
               <input
