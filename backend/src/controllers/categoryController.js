@@ -121,6 +121,18 @@ const updateCategory = async (req, res) => {
   }
 };
 
+const removeCategoryImage = async (req, res) => {
+  try {
+    const category = await prisma.category.update({
+      where: { id: req.params.id },
+      data: { image: null },
+    });
+    res.json({ message: "Category image removed", category });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 const deleteCategory = async (req, res) => {
   try {
     const productCount = await prisma.product.count({ where: { categoryId: req.params.id } });
@@ -135,4 +147,4 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-module.exports = { createCategory, getCategories, getActiveCategories, getCategoryBySlug, updateCategory, deleteCategory };
+module.exports = { createCategory, getCategories, getActiveCategories, getCategoryBySlug, updateCategory, removeCategoryImage, deleteCategory };
