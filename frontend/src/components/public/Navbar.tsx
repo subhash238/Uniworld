@@ -544,8 +544,8 @@ export default function Navbar() {
 
                 {showSupportMenu && (
                   <div className="absolute right-0 top-full z-50 pt-[10px]">
-                    <div className="w-[760px] max-w-[calc(100vw-40px)] border-t-[3px] border-[#e31e24] bg-white px-7 py-6 shadow-[0_25px_60px_rgba(0,0,0,0.18)] animate-fadeIn">
-                      <div className="grid grid-cols-4 gap-8">
+                    <div className="w-[480px] max-w-[calc(100vw-40px)] border-t-[3px] border-[#e31e24] bg-white px-7 py-6 shadow-[0_25px_60px_rgba(0,0,0,0.18)] animate-fadeIn">
+                      <div className="grid grid-cols-2 gap-8">
                         {supportGroups.map((group) => (
                           <div key={group.title}>
                             <h3 className="mb-2 text-[15px] font-bold tracking-tight text-gray-900">
