@@ -16,13 +16,15 @@ interface Product {
   mrp?: number;
   images: { url: string }[];
   isFeatured?: boolean;
-  subCategory?: { id: string; name: string; slug: string } | null;
+  subCategory?: { id: string; name: string; slug: string; parentId?: string | null } | null;
 }
 
 interface SubCategory {
   id: string;
   name: string;
   slug: string;
+  parentId?: string | null;
+  children?: SubCategory[];
   _count?: { products: number };
 }
 
@@ -92,8 +94,13 @@ export default function CategoryDetailPage() {
     let list = category.products || [];
 
     if (selectedSubSlug) {
+      const allSubs = category.subCategories.flatMap((s) => [s, ...(s.children || [])]);
+      const selected = allSubs.find((s) => s.slug === selectedSubSlug);
+      const childIds = new Set((selected?.children || []).map((c) => c.id));
       list = list.filter((p) => {
         if (p.subCategory?.slug === selectedSubSlug) return true;
+        // products assigned to a nested child count for the parent filter
+        if (selected && p.subCategory && childIds.has(p.subCategory.id)) return true;
         // fallback keyword match
         const subCat = category.subCategories.find((s) => s.slug === selectedSubSlug);
         if (subCat && (p.name.toLowerCase().includes(subCat.name.toLowerCase()) || p.description?.toLowerCase().includes(subCat.name.toLowerCase()))) {
@@ -130,7 +137,13 @@ export default function CategoryDetailPage() {
     );
   }
 
-  const activeSubCategoryName = category.subCategories.find((s) => s.slug === selectedSubSlug)?.name;
+  const flatSubs = category.subCategories.flatMap((s) => [s, ...(s.children || [])]);
+  const activeSub = flatSubs.find((s) => s.slug === selectedSubSlug);
+  const activeSubCategoryName = activeSub
+    ? activeSub.parentId
+      ? `${flatSubs.find((s) => s.id === activeSub.parentId)?.name ?? ""} ${activeSub.name}`.trim()
+      : activeSub.name
+    : undefined;
 
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
@@ -222,20 +235,41 @@ export default function CategoryDetailPage() {
                           >
                             <span className="text-[10px]">&bull;</span> All {category.name}
                           </button>
-                          {category.subCategories.map((sub) => {
+                          {category.subCategories.filter((sub) => !sub.parentId).map((sub) => {
                             const isSubActive = selectedSubSlug === sub.slug;
                             return (
-                              <button
-                                key={sub.id}
-                                type="button"
-                                onClick={() => setSelectedSubSlug(sub.slug)}
-                                className={`flex items-center gap-1.5 text-xs text-left w-full transition ${
-                                  isSubActive ? "text-red-600 font-semibold" : "text-gray-500 hover:text-gray-800"
-                                }`}
-                              >
-                                <span className={`text-[10px] ${isSubActive ? "text-red-600" : "text-gray-400"}`}>&bull;</span>
-                                {sub.name}
-                              </button>
+                              <div key={sub.id}>
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedSubSlug(sub.slug)}
+                                  className={`flex items-center gap-1.5 text-xs text-left w-full transition ${
+                                    isSubActive ? "text-red-600 font-semibold" : "text-gray-500 hover:text-gray-800"
+                                  }`}
+                                >
+                                  <span className={`text-[10px] ${isSubActive ? "text-red-600" : "text-gray-400"}`}>&bull;</span>
+                                  {sub.name}
+                                </button>
+                                {(sub.children || []).length > 0 && (
+                                  <div className="pl-4 pt-1 space-y-1">
+                                    {sub.children!.map((child) => {
+                                      const isChildActive = selectedSubSlug === child.slug;
+                                      return (
+                                        <button
+                                          key={child.id}
+                                          type="button"
+                                          onClick={() => setSelectedSubSlug(child.slug)}
+                                          className={`flex items-center gap-1.5 text-[11px] text-left w-full transition ${
+                                            isChildActive ? "text-red-600 font-semibold" : "text-gray-400 hover:text-gray-700"
+                                          }`}
+                                        >
+                                          <span className={`text-[9px] ${isChildActive ? "text-red-600" : "text-gray-300"}`}>&bull;</span>
+                                          {child.name}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
                             );
                           })}
                         </div>

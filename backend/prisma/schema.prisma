@@ -31,15 +31,18 @@ model Category {
 }
 
 model SubCategory {
-  id         String    @id @default(uuid())
+  id         String        @id @default(uuid())
   name       String
-  slug       String    @unique
-  isActive   Boolean   @default(true)
+  slug       String        @unique
+  isActive   Boolean       @default(true)
   categoryId String
-  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category   Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  parentId   String?
+  parent     SubCategory?  @relation("SubCategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children   SubCategory[] @relation("SubCategoryHierarchy")
   products   Product[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 
   @@unique([categoryId, name])
 }
