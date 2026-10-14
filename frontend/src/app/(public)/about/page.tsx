@@ -152,44 +152,43 @@ export default function AboutPage() {
       </section>
 
       {/* Story */}
-      <section className="relative overflow-hidden py-12 md:py-16">
-        <div className="pointer-events-none absolute -left-40 top-16 h-72 w-72 rounded-full bg-[#e31e24]/[0.06] blur-3xl" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
-          <figure className="relative order-last lg:order-first">
-            <div className="pointer-events-none absolute -left-6 -top-6 h-28 w-28 opacity-70" style={{ backgroundImage: "radial-gradient(#ff9c54 2px, transparent 2px)", backgroundSize: "12px 12px" }} />
-            <div className="pointer-events-none absolute -bottom-6 -right-6 h-28 w-28 opacity-70" style={{ backgroundImage: "radial-gradient(#e31e24 2px, transparent 2px)", backgroundSize: "12px 12px" }} />
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fdf3ec] p-2 shadow-[0_30px_60px_-15px_rgba(16,29,51,0.3)] ring-1 ring-slate-200">
-              <Image src="/about/company-journey.png" alt="Uniworld Vision journey of growth" width={800} height={560} priority sizes="(max-width: 1024px) 90vw, 520px" className="mx-auto h-auto w-full rounded-xl object-cover" />
-            </div>
-            <div className="absolute -top-7 right-6 rotate-2 rounded-xl bg-[#e31e24] px-4 py-2.5 text-white shadow-lg transition hover:rotate-0">
-              <p className="text-lg font-extrabold leading-none">2009</p>
-              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/85">Est. Patna</p>
-            </div>
-            <figcaption className="relative -mt-8 ml-4 inline-block max-w-[75%] rounded-xl border border-slate-200 bg-white/95 px-4 py-3 text-sm font-medium text-slate-700 shadow-xl backdrop-blur">
-              Our journey of growth — people, partnerships, a safer tomorrow.
-            </figcaption>
-          </figure>
+      <section className="relative overflow-hidden bg-[#101d33] py-14 text-white md:py-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(227,30,36,0.18),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(49,76,116,0.6),transparent_50%)]" />
+        <div className="pointer-events-none absolute left-8 top-10 h-24 w-24 opacity-30" style={{ backgroundImage: "radial-gradient(#ff9c54 2px, transparent 2px)", backgroundSize: "12px 12px" }} />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           <div>
-            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]"><span className="h-px w-8 bg-[#e31e24]" />Our story</p>
-            <h2 className="mt-2 text-2xl font-extrabold leading-tight text-[#1b2a4a] sm:text-[2rem]">Built on trust,<br />grown on performance</h2>
-            <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-600">
+            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#ff9c54]"><span className="h-px w-10 bg-[#ff9c54]" />Our story</p>
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-4xl">Built on trust,<br />grown on <span className="text-[#ff9c54]">performance</span></h2>
+            <div className="mt-5 space-y-4 text-[15px] leading-7 text-slate-300">
               {story.map((paragraph, index) => (
-                <p key={paragraph.slice(0, 20)} className={index === 0 ? "text-base font-medium leading-7 text-[#1b2a4a]" : undefined}>{paragraph}</p>
+                <p key={paragraph.slice(0, 20)} className={index === 0 ? "border-l-2 border-[#ff9c54] pl-4 text-base font-medium leading-7 text-white" : undefined}>{paragraph}</p>
               ))}
             </div>
             <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
               {storyHighlights.map((highlight) => (
-                <li key={highlight} className="flex items-start gap-2.5 rounded-lg border border-slate-200 bg-[#f7f9fc] px-3.5 py-3 text-[13px] font-medium leading-5 text-slate-700">
-                  <Check size={15} className="mt-0.5 shrink-0 text-[#e31e24]" aria-hidden="true" />
+                <li key={highlight} className="flex items-start gap-2.5 rounded-lg border border-white/15 bg-white/[0.06] px-3.5 py-3 text-[13px] font-medium leading-5 text-slate-200 backdrop-blur-sm">
+                  <Check size={15} className="mt-0.5 shrink-0 text-[#ff9c54]" aria-hidden="true" />
                   <span>{highlight}</span>
                 </li>
               ))}
             </ul>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/products" className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white shadow-[0_10px_25px_-8px_rgba(227,30,36,0.6)] transition hover:-translate-y-0.5 hover:bg-[#c9181d]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
-              <Link href="/dealers" className="inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-slate-200 px-5 text-sm font-bold text-[#1b2a4a] transition hover:-translate-y-0.5 hover:border-[#1b2a4a]">Become a dealer</Link>
+              <Link href="/dealers" className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/30 px-5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-[#101d33]">Become a dealer</Link>
             </div>
           </div>
+          <figure className="relative">
+            <div className="pointer-events-none absolute -inset-3 rounded-3xl bg-gradient-to-br from-[#ff9c54]/25 via-transparent to-[#e31e24]/25 blur-xl" />
+            <div className="relative overflow-hidden rounded-2xl bg-white p-2.5 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] ring-1 ring-white/20">
+              <Image src="/about/company-journey.png" alt="Uniworld Vision journey of growth" width={800} height={560} priority sizes="(max-width: 1024px) 90vw, 520px" className="mx-auto h-auto w-full rounded-xl object-cover" />
+            </div>
+            <div className="absolute -bottom-5 left-6 rounded-xl bg-[#e31e24] px-4 py-2.5 text-white shadow-lg">
+              <p className="text-lg font-extrabold leading-none">2009</p>
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/85">Est. Patna</p>
+            </div>
+            <figcaption className="sr-only">Our journey of growth — people, partnerships, a safer tomorrow.</figcaption>
+          </figure>
         </div>
       </section>
 
