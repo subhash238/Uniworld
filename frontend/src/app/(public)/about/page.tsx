@@ -2,68 +2,69 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  Camera,
-  Cable,
-  HardDrive,
-  ShieldCheck,
-  Server,
-  Wifi,
-  Cpu,
-  Network,
-  MonitorSmartphone,
-  Factory,
-  Truck,
-  Headset,
-  Boxes,
-  Eye,
-  Target,
+  ArrowUpRight,
+  Award,
   BadgeCheck,
-  Sparkles,
-  Handshake,
+  Boxes,
+  Building2,
+  Cable,
+  Camera,
   Check,
+  Cpu,
+  Eye,
+  Factory,
+  Globe2,
+  Handshake,
+  HardDrive,
+  Headset,
+  MonitorSmartphone,
+  Network,
+  Server,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Truck,
+  Users,
+  Wifi,
 } from "lucide-react";
+import { contactDetails } from "@/lib/contactDetails";
+
+export const metadata = {
+  title: "About Us",
+  description:
+    "Uniworld Vision Pvt. Ltd. — manufacturing and distributing CCTV cameras, recorders and surveillance products across Eastern India since 2009.",
+  alternates: { canonical: "https://uniworld.in/about" },
+};
+
+const stats = [
+  { number: "16+", label: "Years in security" },
+  { number: "5+", label: "Regions served" },
+  { number: "1,000+", label: "Products delivered" },
+  { number: "24/7", label: "Technical support" },
+];
+
+const story = [
+  "Since 2009, Uniworld Vision Pvt. Ltd. has stood for one thing: reliable security, honestly delivered. What began as a regional distribution business in Patna has grown into a security technology company serving Bihar, Jharkhand, West Bengal, Odisha and Nepal.",
+  "Along the way we became trusted distribution partners for globally recognized brands — CP PLUS, Dahua Technology and Hikvision — before launching our own UNIWORLD line of cameras, recorders and networking products in 2023.",
+  "Today we work alongside dealers, system integrators, enterprises and end users — pairing the right product with honest advice, and backing every sale with responsive technical support.",
+];
 
 const milestones = [
-  {
-    year: "2009",
-    title: "Foundation",
-    description: "Uniworld Vision was established with the vision of delivering dependable security solutions backed by quality products and exceptional customer service.",
-  },
-  {
-    year: "2012",
-    title: "CP PLUS Partnership",
-    description: "Expanded our surveillance portfolio by becoming a trusted distribution partner of CP PLUS.",
-  },
-  {
-    year: "2014",
-    title: "Dahua Technology",
-    description: "Partnered with Dahua Technology to provide advanced surveillance solutions across Eastern India.",
-  },
-  {
-    year: "2016",
-    title: "Market Leadership",
-    description: "Recognized as one of Bihar's leading CCTV distribution partners through continuous growth and customer trust.",
-  },
-  {
-    year: "2019",
-    title: "Hikvision Partnership",
-    description: "Added Hikvision products to our portfolio, offering customers even more advanced and reliable security solutions.",
-  },
-  {
-    year: "2020",
-    title: "Jharkhand Expansion",
-    description: "Opened our Jharkhand branch to improve product availability and technical support.",
-  },
-  {
-    year: "2023",
-    title: "Launch of UNIWORLD Brand",
-    description: "Started manufacturing CCTV cameras, recorders, networking products, and surveillance accessories under our own UNIWORLD brand.",
-  },
-  {
-    year: "2024",
-    title: "Rapid Growth",
-    description: "Became one of the fastest-growing CCTV companies across Bihar and Jharkhand while expanding throughout Eastern India.",
-  },
+  { year: "2009", title: "Foundation", description: "Uniworld Vision is established in Patna with a simple promise: dependable security backed by exceptional service." },
+  { year: "2012", title: "CP PLUS Partnership", description: "We join the CP PLUS distribution family, bringing India's leading surveillance brand to Eastern India." },
+  { year: "2014", title: "Dahua Technology", description: "Our portfolio grows with Dahua's advanced surveillance range across the region." },
+  { year: "2016", title: "Market Leadership", description: "Recognized as one of Bihar's leading CCTV distribution partners." },
+  { year: "2019", title: "Hikvision Partnership", description: "Hikvision joins our lineup — more choice, more capability for every project." },
+  { year: "2020", title: "Jharkhand Expansion", description: "A new branch brings product availability and technical support closer to dealers." },
+  { year: "2023", title: "UNIWORLD Brand Launch", description: "We start manufacturing cameras, recorders and accessories under our own brand." },
+  { year: "2024", title: "Rapid Growth", description: "Among the fastest-growing CCTV companies across Bihar and Jharkhand." },
+];
+
+const brands = [
+  { name: "CP PLUS", role: "Authorized distributor since 2012" },
+  { name: "Dahua", role: "Distribution partner since 2014" },
+  { name: "Hikvision", role: "Partner since 2019" },
+  { name: "UNIWORLD", role: "Our own manufacturing brand" },
 ];
 
 const productRanges = [
@@ -71,7 +72,7 @@ const productRanges = [
   { icon: MonitorSmartphone, title: "HD Analog Cameras" },
   { icon: Cpu, title: "AI Smart Cameras" },
   { icon: Wifi, title: "Wi-Fi Cameras" },
-  { icon: Camera, title: "PTZ Cameras" },
+  { icon: Camera, title: "PTZ & Speed Domes" },
   { icon: Camera, title: "4G Solar Cameras" },
   { icon: Server, title: "DVR & NVR" },
   { icon: Network, title: "PoE Switches" },
@@ -82,28 +83,28 @@ const productRanges = [
 ];
 
 const strengths = [
-  { icon: Factory, title: "Manufacturing Excellence", description: "Products manufactured using modern technology with strict quality standards." },
-  { icon: Boxes, title: "Complete Product Range", description: "Everything from CCTV cameras to networking equipment under one roof." },
-  { icon: Truck, title: "Strong Distribution Network", description: "Reliable dealer network ensuring fast product availability across multiple states." },
-  { icon: ShieldCheck, title: "Quality Assurance", description: "Every product is tested to deliver consistent performance and durability." },
-  { icon: Cpu, title: "Innovation", description: "AI surveillance, cloud connectivity, smart monitoring, and future-ready solutions." },
-  { icon: Headset, title: "Dedicated Support", description: "Professional technical guidance and responsive after-sales service for every customer." },
+  { icon: Factory, title: "Manufacturing excellence", description: "Modern production with strict quality control at every stage." },
+  { icon: Boxes, title: "Complete product range", description: "Cameras, recorders, networking and accessories — everything under one roof." },
+  { icon: Truck, title: "Strong distribution", description: "A dealer network that keeps products available and moving across multiple states." },
+  { icon: ShieldCheck, title: "Quality assurance", description: "Every product is tested for consistent performance and durability." },
+  { icon: Cpu, title: "Innovation", description: "AI surveillance, cloud connectivity and smart monitoring for tomorrow's needs." },
+  { icon: Headset, title: "Dedicated support", description: "Real technical guidance and responsive after-sales service on every order." },
 ];
 
 const mission = [
-  "Manufacture high-quality surveillance products.",
-  "Deliver reliable and affordable security solutions.",
-  "Support dealers and business partners.",
-  "Continuously innovate with emerging technologies.",
-  "Help create safer homes, businesses, and communities.",
+  "Manufacture high-quality surveillance products",
+  "Keep advanced security affordable and accessible",
+  "Empower dealers, distributors and partners",
+  "Keep innovating with emerging technology",
+  "Build safer homes, businesses and communities",
 ];
 
 const values = [
   { icon: Handshake, title: "Integrity" },
   { icon: ShieldCheck, title: "Quality" },
   { icon: Sparkles, title: "Innovation" },
-  { icon: BadgeCheck, title: "Customer Focus" },
-  { icon: Target, title: "Reliability" },
+  { icon: Users, title: "Customer focus" },
+  { icon: BadgeCheck, title: "Reliability" },
 ];
 
 const regions = ["Bihar", "Jharkhand", "West Bengal", "Odisha", "Nepal"];
@@ -112,158 +113,222 @@ const sectors = ["Residential", "Commercial", "Industrial", "Education", "Health
 export default function AboutPage() {
   return (
     <div className="bg-white">
-      <section className="bg-[#17253d] px-5 py-7 text-white sm:px-8 md:py-8">
-        <div className="mx-auto max-w-7xl">
-          <nav aria-label="Breadcrumb" className="mb-2 flex items-center gap-2 text-xs text-slate-300">
-            <Link href="/" className="hover:text-white">Home</Link>
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-[#101d33] text-white">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(49,76,116,0.9),transparent_60%)]" />
+        <div className="pointer-events-none absolute -right-24 top-1/2 hidden h-[420px] w-[420px] -translate-y-1/2 rounded-full border border-white/10 lg:block" />
+        <div className="pointer-events-none absolute -right-8 top-1/2 hidden h-[280px] w-[280px] -translate-y-1/2 rounded-full border border-white/10 lg:block" />
+        <div className="relative mx-auto max-w-7xl px-5 py-12 sm:px-8 md:py-16">
+          <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-2 text-xs text-slate-400">
+            <Link href="/" className="transition hover:text-white">Home</Link>
             <span aria-hidden="true">/</span>
-            <span aria-current="page">About us</span>
+            <span aria-current="page" className="text-slate-200">About us</span>
           </nav>
-          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">About Uniworld Vision</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-300">Manufacturing, distribution and security expertise since 2009.</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#ff9c54]">Uniworld Vision Pvt. Ltd.</p>
+          <h1 className="mt-3 max-w-2xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+            Securing what matters, <span className="text-[#ff9c54]">since 2009.</span>
+          </h1>
+          <p className="mt-4 max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
+            From a Patna distribution desk to an Eastern India security company with its own manufacturing brand — Uniworld delivers cameras, recorders and support you can actually rely on.
+          </p>
+          <div className="mt-8 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/15 bg-white/10 sm:grid-cols-4">
+            {stats.map((stat) => (
+              <div key={stat.label} className="bg-[#101d33]/80 px-5 py-4 backdrop-blur">
+                <p className="text-2xl font-extrabold text-[#ff9c54] sm:text-3xl">{stat.number}</p>
+                <p className="mt-1 text-xs font-medium text-slate-300">{stat.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="py-6 md:py-8">
-        <div className="mx-auto grid max-w-7xl items-center gap-6 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+      {/* Story */}
+      <section className="py-10 md:py-14">
+        <div className="mx-auto grid max-w-7xl items-center gap-8 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
+          <figure className="relative order-last lg:order-first">
+            <div className="absolute -left-3 -top-3 h-full w-full rounded-2xl bg-[#e31e24]/10" />
+            <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+              <Image src="/about/company.jpeg" alt="Uniworld Vision team at a company event" width={447} height={447} priority sizes="(max-width: 1024px) 90vw, 480px" className="mx-auto h-auto w-full max-w-lg object-contain" />
+            </div>
+            <figcaption className="relative -mt-6 ml-4 inline-block rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-lg">
+              Our team, our partners — one mission.
+            </figcaption>
+          </figure>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-[#b94e00]">Our story</p>
-            <h2 className="mt-2 text-2xl font-bold leading-tight text-[#1b2a4a] sm:text-3xl">Building trust through intelligent security solutions</h2>
-            <div className="mt-4 space-y-4 text-base leading-7 text-slate-600">
-              <p>Since <strong className="font-semibold text-[#1b2a4a]">2009</strong>, Uniworld Vision Pvt. Ltd. has been committed to reliable, innovative and cost-effective security solutions for homes, businesses, industries, institutions and public infrastructure.</p>
-              <p>What started as a regional distributor has grown into a security technology company with a strong presence across Bihar, Jharkhand, West Bengal, Odisha, Nepal and other parts of Eastern India.</p>
-              <p>Today, we manufacture CCTV cameras and surveillance products under the <strong className="font-semibold text-[#1b2a4a]">UNIWORLD</strong> brand while distributing products from globally recognized security brands.</p>
-              <p>Our team works closely with dealers, distributors, system integrators and end users, combining product guidance with responsive technical and after-sales support.</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">Our story</p>
+            <h2 className="mt-2 text-2xl font-bold leading-tight text-[#1b2a4a] sm:text-3xl">Built on trust, grown on performance</h2>
+            <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-600">
+              {story.map((paragraph) => <p key={paragraph.slice(0, 20)}>{paragraph}</p>)}
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/products" className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white transition hover:bg-[#c9181d]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
+              <Link href="/dealers" className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-slate-300 px-5 text-sm font-bold text-[#1b2a4a] transition hover:border-[#1b2a4a]">Become a dealer</Link>
             </div>
           </div>
-          <div>
-            <figure className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
-              <Image src="/about/company.jpeg" alt="Group photo at a Uniworld Vision company event" width={447} height={447} priority sizes="(max-width: 1024px) 90vw, 500px" className="mx-auto h-auto w-full max-w-lg object-contain" />
-              <figcaption className="border-t border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">Working with dealers, distributors and security professionals.</figcaption>
-            </figure>
-            <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-              {[
-                { number: "16+", title: "Years of experience" },
-                { number: "5+", title: "Regions served" },
-                { number: "100%", title: "Quality focus" },
-                { number: "24/7", title: "Technical support" },
-              ].map((stat) => (
-                <div key={stat.title}>
-                  <dt className="text-xs leading-5 text-slate-500">{stat.title}</dt>
-                  <dd className="mt-1 text-2xl font-bold text-[#1b2a4a]">{stat.number}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
         </div>
       </section>
 
-      <section className="border-y border-slate-100 bg-[#f7f9fc] py-6 md:py-8">
+      {/* Journey timeline */}
+      <section className="border-y border-slate-100 bg-[#f7f9fc] py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <p className="text-xs font-bold uppercase tracking-wider text-[#b94e00]">Our journey</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">Our journey</p>
           <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">A legacy of growth &amp; innovation</h2>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">From regional distribution to our own surveillance brand, each milestone reflects our growth across Eastern India.</p>
-          <ol className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <ol className="relative mt-8 space-y-6 border-l-2 border-slate-200 pl-6 sm:pl-8 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:space-y-0 lg:gap-y-10">
             {milestones.map((item) => (
-              <li key={item.year} className="rounded-xl border border-slate-200 bg-white p-5">
-                <div className="flex items-start gap-3">
-                  <span className="shrink-0 rounded-full bg-[#fff4ec] px-3 py-1 text-xs font-bold text-[#b94e00]">{item.year}</span>
-                  <h3 className="text-base font-bold text-[#1b2a4a]">{item.title}</h3>
+              <li key={item.year} className="relative">
+                <span className="absolute -left-[35px] top-1 h-4 w-4 rounded-full border-4 border-[#f7f9fc] bg-[#e31e24] sm:-left-[42px]" />
+                <div className="rounded-xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-md">
+                  <div className="flex items-center gap-3">
+                    <span className="rounded-full bg-[#e31e24]/10 px-3 py-1 text-xs font-bold text-[#e31e24]">{item.year}</span>
+                    <h3 className="text-base font-bold text-[#1b2a4a]">{item.title}</h3>
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      <section className="py-6 md:py-8">
+      {/* Brand partners */}
+      <section className="py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-[#b94e00]">Products &amp; presence</p>
-              <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">A complete security portfolio</h2>
-            </div>
-            <Link href="/products" className="inline-flex items-center gap-2 text-sm font-bold text-[#b94e00] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6B00]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
-          </div>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">We manufacture and distribute CCTV, networking and security products designed for long-term performance and reliability.</p>
-          <ul className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-3">
-            {productRanges.map((product) => (
-              <li key={product.title} className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-3 sm:gap-3 sm:px-4">
-                <product.icon size={20} className="shrink-0 text-[#b94e00]" aria-hidden="true" />
-                <span className="text-sm font-semibold text-[#1b2a4a]">{product.title}</span>
-              </li>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">Partnerships</p>
+          <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">Backed by the brands the industry trusts</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {brands.map((brand) => (
+              <div key={brand.name} className="rounded-xl border border-slate-200 bg-white p-6 text-center transition hover:border-[#e31e24]/40 hover:shadow-md">
+                <p className={`text-xl font-extrabold tracking-tight ${brand.name === "UNIWORLD" ? "text-[#e31e24]" : "text-[#1b2a4a]"}`}>{brand.name}</p>
+                <p className="mt-2 text-xs leading-5 text-slate-500">{brand.role}</p>
+              </div>
             ))}
-          </ul>
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
-            <div className="rounded-xl bg-slate-50 p-5">
-              <h3 className="text-sm font-bold text-[#1b2a4a]">Where we work</h3>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {regions.map((region) => <li key={region} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600">{region}</li>)}
-              </ul>
-            </div>
-            <div className="rounded-xl bg-slate-50 p-5">
-              <h3 className="text-sm font-bold text-[#1b2a4a]">Who we support</h3>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {sectors.map((sector) => <li key={sector} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600">{sector}</li>)}
-              </ul>
-            </div>
           </div>
         </div>
       </section>
 
-      <section className="border-y border-slate-100 bg-[#f7f9fc] py-6 md:py-8">
+      {/* Portfolio */}
+      <section className="border-y border-slate-100 bg-[#f7f9fc] py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <p className="text-xs font-bold uppercase tracking-wider text-[#b94e00]">Why Uniworld</p>
-          <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">Products, partnerships and support</h2>
-          <ul className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {strengths.map((item) => (
-              <li key={item.title} className="flex items-start gap-3">
-                <item.icon size={22} className="mt-1 shrink-0 text-[#b94e00]" aria-hidden="true" />
-                <div>
-                  <h3 className="text-base font-bold text-[#1b2a4a]">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
-                </div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">Products &amp; presence</p>
+              <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">A complete security portfolio</h2>
+            </div>
+            <Link href="/products" className="inline-flex items-center gap-2 text-sm font-bold text-[#e31e24] hover:underline">Explore products <ArrowUpRight size={16} aria-hidden="true" /></Link>
+          </div>
+          <ul className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3">
+            {productRanges.map((product) => (
+              <li key={product.title} className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3.5 transition hover:border-[#e31e24]/40 hover:shadow-sm">
+                <product.icon size={20} className="shrink-0 text-[#e31e24]" aria-hidden="true" />
+                <span className="text-sm font-semibold text-[#1b2a4a]">{product.title}</span>
               </li>
             ))}
           </ul>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
-              <div className="flex items-center gap-3">
-                <Eye size={22} className="text-[#b94e00]" aria-hidden="true" />
-                <h3 className="text-lg font-bold text-[#1b2a4a]">Our vision</h3>
+              <div className="flex items-center gap-2.5">
+                <Globe2 size={18} className="text-[#e31e24]" aria-hidden="true" />
+                <h3 className="text-sm font-bold text-[#1b2a4a]">Where we work</h3>
               </div>
-              <p className="mt-3 text-sm leading-7 text-slate-600">To become one of India's most trusted security technology brands by delivering innovative products, reliable solutions, and exceptional customer experiences.</p>
-            </div>
-            <div className="rounded-xl bg-[#1b2a4a] p-5 text-white sm:p-6">
-              <div className="flex items-center gap-3">
-                <Target size={22} className="text-[#ff9c54]" aria-hidden="true" />
-                <h3 className="text-lg font-bold">Our mission</h3>
-              </div>
-              <ul className="mt-3 space-y-2">
-                {mission.map((item) => <li key={item} className="flex items-start gap-2 text-sm leading-6 text-slate-200"><Check size={16} className="mt-1 shrink-0 text-[#ff9c54]" aria-hidden="true" /><span>{item}</span></li>)}
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {regions.map((region) => <li key={region} className="rounded-full border border-slate-200 bg-[#f7f9fc] px-3 py-1.5 text-xs font-medium text-slate-600">{region}</li>)}
               </ul>
             </div>
-          </div>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <h3 className="text-sm font-bold text-[#1b2a4a]">Our values</h3>
-            <ul className="flex flex-wrap gap-2">
-              {values.map((value) => <li key={value.title} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600"><value.icon size={15} className="text-[#b94e00]" aria-hidden="true" />{value.title}</li>)}
-            </ul>
+            <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
+              <div className="flex items-center gap-2.5">
+                <Building2 size={18} className="text-[#e31e24]" aria-hidden="true" />
+                <h3 className="text-sm font-bold text-[#1b2a4a]">Who we support</h3>
+              </div>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {sectors.map((sector) => <li key={sector} className="rounded-full border border-slate-200 bg-[#f7f9fc] px-3 py-1.5 text-xs font-medium text-slate-600">{sector}</li>)}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-6 sm:px-8 md:py-8">
-        <div className="flex flex-col items-start justify-between gap-5 rounded-xl bg-[#1b2a4a] p-6 text-white sm:p-8 lg:flex-row lg:items-center">
-          <div className="max-w-xl">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#ff9c54]">Building a safer future</p>
-            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Protect what matters most</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-300">From homes and businesses to institutions and communities, our team can help with product selection, project requirements and dealer enquiries.</p>
+      {/* Why Uniworld + vision/mission */}
+      <section className="py-10 md:py-14">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">Why Uniworld</p>
+          <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">Products, partnerships and people</h2>
+          <ul className="mt-6 grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+            {strengths.map((item) => (
+              <li key={item.title} className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#e31e24]/10 text-[#e31e24]">
+                  <item.icon size={21} aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="text-base font-bold text-[#1b2a4a]">{item.title}</h3>
+                  <p className="mt-1.5 text-sm leading-6 text-slate-600">{item.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#e31e24]/10 text-[#e31e24]"><Eye size={22} aria-hidden="true" /></span>
+                <h3 className="text-lg font-bold text-[#1b2a4a]">Our vision</h3>
+              </div>
+              <p className="mt-4 text-sm leading-7 text-slate-600">To become one of India's most trusted security technology brands — the name people reach for when they need protection they never have to second-guess.</p>
+            </div>
+            <div className="rounded-2xl bg-[#1b2a4a] p-6 text-white sm:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-[#ff9c54]"><Target size={22} aria-hidden="true" /></span>
+                <h3 className="text-lg font-bold">Our mission</h3>
+              </div>
+              <ul className="mt-4 space-y-2.5">
+                {mission.map((item) => <li key={item} className="flex items-start gap-2.5 text-sm leading-6 text-slate-200"><Check size={16} className="mt-1 shrink-0 text-[#ff9c54]" aria-hidden="true" /><span>{item}</span></li>)}
+              </ul>
+            </div>
           </div>
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row lg:shrink-0">
-            <Link href="/products" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#FF6B00] px-5 text-sm font-bold text-white transition hover:bg-[#e95f00] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
-            <Link href="/contact" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/30 px-5 text-sm font-bold transition hover:bg-white hover:text-[#1b2a4a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Contact our team</Link>
+
+          <ul className="mt-6 flex flex-wrap gap-2.5">
+            {values.map((value) => (
+              <li key={value.title} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700">
+                <value.icon size={16} className="text-[#e31e24]" aria-hidden="true" />{value.title}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Offices strip */}
+      <section className="border-y border-slate-100 bg-[#f7f9fc] py-10 md:py-12">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">Our offices</p>
+          <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">Come say hello</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {contactDetails.offices.map((office) => (
+              <div key={office.name} className="flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#e31e24]/10 text-[#e31e24]"><Building2 size={20} aria-hidden="true" /></span>
+                <div>
+                  <h3 className="font-bold text-[#1b2a4a]">{office.name}</h3>
+                  <address className="mt-1.5 text-sm not-italic leading-6 text-slate-600">{office.address}</address>
+                  <a href={office.mapsHref} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-[#e31e24] hover:underline">Open map <ArrowUpRight size={14} aria-hidden="true" /></a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 md:py-14">
+        <div className="relative overflow-hidden rounded-2xl bg-[#101d33] p-7 text-white sm:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(227,30,36,0.25),transparent_55%)]" />
+          <div className="relative flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+            <div className="max-w-xl">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#ff9c54]"><Award size={14} className="mr-1.5 inline" aria-hidden="true" />Building a safer future</p>
+              <h2 className="mt-3 text-2xl font-bold sm:text-3xl">Protect what matters most</h2>
+              <p className="mt-3 text-sm leading-6 text-slate-300">Homes, businesses, institutions — tell us what you need to secure and our team will guide you to the right products and partners.</p>
+            </div>
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row lg:shrink-0">
+              <Link href="/products" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#e31e24] px-6 text-sm font-bold text-white transition hover:bg-[#c9181d]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
+              <Link href="/contact" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/30 px-6 text-sm font-bold transition hover:bg-white hover:text-[#101d33]">Talk to our team</Link>
+            </div>
           </div>
         </div>
       </section>
