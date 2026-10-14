@@ -15,7 +15,10 @@ interface SubCategory {
   name: string;
   slug: string;
   isActive: boolean;
+  categoryId: string;
+  parentId?: string | null;
   category: { id: string; name: string };
+  parent?: { id: string; name: string } | null;
 }
 
 export default function AdminSubCategoriesPage() {
@@ -24,7 +27,7 @@ export default function AdminSubCategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", categoryId: "", isActive: "true" });
+  const [form, setForm] = useState({ name: "", categoryId: "", parentId: "", isActive: "true" });
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -47,7 +50,7 @@ export default function AdminSubCategoriesPage() {
   };
 
   const resetForm = () => {
-    setForm({ name: "", categoryId: "", isActive: "true" });
+    setForm({ name: "", categoryId: "", parentId: "", isActive: "true" });
     setEditingId(null);
     setShowForm(false);
   };
@@ -58,12 +61,13 @@ export default function AdminSubCategoriesPage() {
     if (!form.categoryId) { toast.error("Select a parent category"); return; }
 
     setSaving(true);
+    const payload = { ...form, parentId: form.parentId || null };
     try {
       if (editingId) {
-        await api.put(`/subcategories/${editingId}`, form);
+        await api.put(`/subcategories/${editingId}`, payload);
         toast.success("Sub-category updated!");
       } else {
-        await api.post("/subcategories", form);
+        await api.post("/subcategories", payload);
         toast.success("Sub-category created!");
       }
       resetForm();
@@ -76,7 +80,7 @@ export default function AdminSubCategoriesPage() {
   };
 
   const handleEdit = (sub: SubCategory) => {
-    setForm({ name: sub.name, categoryId: sub.category.id, isActive: String(sub.isActive) });
+    setForm({ name: sub.name, categoryId: sub.category.id, parentId: sub.parentId || "", isActive: String(sub.isActive) });
     setEditingId(sub.id);
     setShowForm(true);
   };
@@ -128,6 +132,22 @@ export default function AdminSubCategoriesPage() {
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Parent Sub Category <span className="text-gray-400 font-normal">(optional — for third level, e.g. PoE → 8ch)</span></label>
+                <select
+                  value={form.parentId}
+                  onChange={(e) => setForm({ ...form, parentId: e.target.value })}
+                  disabled={!form.categoryId}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none disabled:bg-gray-50 disabled:text-gray-400"
+                >
+                  <option value="">None (top-level sub category)</option>
+                  {subCategories
+                    .filter((s) => s.category.id === form.categoryId && s.id !== editingId && !s.parentId)
+                    .map((s) => (
+                      <option key={s.id} value={s.id}>{s.name}</option>
+                    ))}
                 </select>
               </div>
               <div>
@@ -184,11 +204,18 @@ export default function AdminSubCategoriesPage() {
               subCategories.map((sub) => (
                 <tr key={sub.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
-                    <span className="font-medium">{sub.name}</span>
+                    <span className={sub.parentId ? "font-medium pl-4" : "font-medium"}>
+                      {sub.parentId ? "└ " : ""}{sub.name}
+                    </span>
                     <span className="text-xs text-gray-400 ml-2">/{sub.slug}</span>
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-sm bg-gray-100 px-2 py-1 rounded">{sub.category.name}</span>
+                    {sub.parent && (
+                      <span className="text-sm bg-blue-50 text-blue-700 px-2 py-1 rounded ml-1">
+                        {sub.parent.name}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <span className={`text-xs font-medium px-2 py-1 rounded-full ${sub.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>

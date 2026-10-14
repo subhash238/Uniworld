@@ -45,7 +45,11 @@ const getActiveCategories = async (req, res) => {
       where: { isActive: true },
       include: {
         _count: { select: { products: true } },
-        subCategories: { where: { isActive: true }, orderBy: { name: "asc" } },
+        subCategories: {
+          where: { isActive: true },
+          include: { children: { where: { isActive: true }, orderBy: { name: "asc" } } },
+          orderBy: { name: "asc" },
+        },
       },
       orderBy: { name: "asc" },
     });
@@ -62,7 +66,14 @@ const getCategoryBySlug = async (req, res) => {
       include: {
         subCategories: {
           where: { isActive: true },
-          include: { _count: { select: { products: true } } },
+          include: {
+            _count: { select: { products: true } },
+            children: {
+              where: { isActive: true },
+              include: { _count: { select: { products: true } } },
+              orderBy: { name: "asc" },
+            },
+          },
           orderBy: { name: "asc" },
         },
         products: {
