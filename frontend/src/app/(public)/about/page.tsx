@@ -156,17 +156,17 @@ export default function AboutPage() {
         <div className="pointer-events-none absolute -left-40 top-16 h-72 w-72 rounded-full bg-[#e31e24]/[0.06] blur-3xl" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <figure className="relative order-last lg:order-first">
-            <div className="absolute -left-4 -top-4 h-24 w-24 rounded-tl-2xl border-l-4 border-t-4 border-[#ff9c54]/60" />
-            <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-br-2xl border-b-4 border-r-4 border-[#e31e24]/50" />
-            <div className="relative overflow-hidden rounded-2xl bg-[#101d33] p-2 shadow-[0_30px_60px_-15px_rgba(16,29,51,0.35)]">
-              <Image src="/about/company.jpeg" alt="Uniworld Vision team at a company event" width={447} height={447} priority sizes="(max-width: 1024px) 90vw, 480px" className="mx-auto h-auto w-full rounded-xl object-contain" />
+            <div className="pointer-events-none absolute -left-6 -top-6 h-28 w-28 opacity-70" style={{ backgroundImage: "radial-gradient(#ff9c54 2px, transparent 2px)", backgroundSize: "12px 12px" }} />
+            <div className="pointer-events-none absolute -bottom-6 -right-6 h-28 w-28 opacity-70" style={{ backgroundImage: "radial-gradient(#e31e24 2px, transparent 2px)", backgroundSize: "12px 12px" }} />
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fdf3ec] p-2 shadow-[0_30px_60px_-15px_rgba(16,29,51,0.3)] ring-1 ring-slate-200">
+              <Image src="/about/company-journey.png" alt="Uniworld Vision journey of growth" width={800} height={560} priority sizes="(max-width: 1024px) 90vw, 520px" className="mx-auto h-auto w-full rounded-xl object-cover" />
             </div>
-            <div className="absolute -right-3 top-6 rounded-xl bg-[#e31e24] px-4 py-2.5 text-white shadow-lg sm:-right-5">
+            <div className="absolute -right-3 top-5 rotate-2 rounded-xl bg-[#e31e24] px-4 py-2.5 text-white shadow-lg transition hover:rotate-0 sm:-right-5">
               <p className="text-lg font-extrabold leading-none">2009</p>
               <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/85">Est. Patna</p>
             </div>
-            <figcaption className="relative -mt-8 ml-4 inline-block max-w-[75%] rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-xl">
-              Our team, our partners — one mission.
+            <figcaption className="relative -mt-8 ml-4 inline-block max-w-[75%] rounded-xl border border-slate-200 bg-white/95 px-4 py-3 text-sm font-medium text-slate-700 shadow-xl backdrop-blur">
+              Our journey of growth — people, partnerships, a safer tomorrow.
             </figcaption>
           </figure>
           <div>
