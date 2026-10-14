@@ -129,6 +129,13 @@ export default function EditProductPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
+    const tooBig = files.filter((f) => f.size > 1024 * 1024);
+    if (tooBig.length > 0) {
+      toast.error(`Image${tooBig.length > 1 ? "s" : ""} too large — max 1 MB each (${tooBig[0].name}: ${(tooBig[0].size / 1024 / 1024).toFixed(1)} MB)`);
+      e.target.value = "";
+      return;
+    }
+
     if (images.length + newImages.length + files.length > 5) {
       toast.error("Maximum 5 images allowed");
 
@@ -216,6 +223,11 @@ export default function EditProductPage() {
     setDatasheet(res.data.url);
   };
 
+
+  const uploadError = (error: any, fallback: string) =>
+    error.response?.status === 413
+      ? "File too large — product images must be under 1 MB each (or check your server limit)"
+      : error.response?.data?.message || fallback;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -236,7 +248,7 @@ export default function EditProductPage() {
 
       router.push("/admin/products");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to update product");
+      toast.error(uploadError(error, "Failed to update product"));
     } finally {
       setLoading(false);
     }
