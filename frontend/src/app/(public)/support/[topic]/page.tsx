@@ -12,6 +12,7 @@ import {
 } from "@/lib/supportLinks";
 import DownloadSections from "./DownloadSections";
 import HddBandwidthCalculator from "./HddBandwidthCalculator";
+import LensCalculator from "./LensCalculator";
 
 interface Props {
   params: Promise<{ topic: string }>;
@@ -112,6 +113,8 @@ export default async function SupportTopicPage({ params }: Props) {
 
         {link.slug === "hdd-bandwidth-calculator" ? (
           <HddBandwidthCalculator />
+        ) : link.slug === "lens-calculator" ? (
+          <LensCalculator />
         ) : (
         <div className="space-y-6">
         {downloads.length > 0 && <DownloadSections items={downloads} />}
