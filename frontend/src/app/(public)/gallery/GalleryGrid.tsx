@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { FiPlay, FiX } from "react-icons/fi";
 
 interface GalleryItem {
@@ -23,18 +22,19 @@ export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+      <div className="columns-2 gap-3 sm:columns-3 sm:gap-4 lg:columns-4">
         {items.map((item) => (
           <button
             key={item.id}
             type="button"
             onClick={() => setOpenId(item.id)}
-            className="group relative aspect-square overflow-hidden rounded-lg border border-slate-200 bg-slate-100 text-left"
+            className="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-lg border border-slate-200 bg-slate-100 text-left sm:mb-4"
           >
             {item.mediaType === "video" ? (
-              <video src={item.fileUrl} muted playsInline preload="metadata" className="h-full w-full object-cover transition group-hover:scale-105" />
+              <video src={item.fileUrl} muted playsInline preload="metadata" className="block w-full transition group-hover:scale-105" />
             ) : (
-              <Image src={item.fileUrl} alt={item.title} fill sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw" className="object-cover transition group-hover:scale-105" />
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={item.fileUrl} alt={item.title} loading="lazy" className="block w-full transition group-hover:scale-105" />
             )}
             {item.mediaType === "video" && (
               <span className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white">
