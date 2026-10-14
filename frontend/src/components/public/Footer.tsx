@@ -8,6 +8,7 @@ import { FiPhone, FiMail, FiMapPin, FiArrowUpRight, FiMessageSquare, FiPenTool }
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 import api from "@/lib/api";
 import { contactDetails } from "@/lib/contactDetails";
+import { supportGroups, supportHref } from "@/lib/supportLinks";
 
 interface Category {
   id: string;
@@ -78,7 +79,7 @@ export default function Footer() {
       </section>}
 
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="grid gap-8 py-10 sm:grid-cols-2 sm:gap-8 md:py-12 lg:grid-cols-[1.3fr_0.8fr_0.9fr_1.2fr] lg:gap-8 lg:py-14">
+        <div className="grid gap-8 py-10 sm:grid-cols-2 sm:gap-8 md:py-12 lg:grid-cols-[1.3fr_0.7fr_0.8fr_0.9fr_1.1fr] lg:gap-8 lg:py-14">
           <div>
             <Image src="/images/logo-nav.jpeg" alt="Uniworld" width={220} height={70} className="mb-5 h-14 w-auto bg-white p-1" unoptimized />
             <p className="max-w-xs text-sm leading-6 text-slate-400">
@@ -112,6 +113,15 @@ export default function Footer() {
                 <li><Link href="/categories" className="transition-colors hover:text-white">Browse all categories</Link></li>
               )}
               {categories.length > 6 && <li><Link href="/categories" className="inline-flex items-center gap-1 text-[#f3a15e] hover:text-white">All categories <FiArrowUpRight size={13} /></Link></li>}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-white">Support</h3>
+            <ul className="space-y-2.5 text-sm text-slate-400">
+              {supportGroups.flatMap((group) => group.links).map((link) => (
+                <li key={link.slug}><Link href={supportHref(link.slug)} className="transition-colors hover:text-white">{link.title}</Link></li>
+              ))}
             </ul>
           </div>
 
