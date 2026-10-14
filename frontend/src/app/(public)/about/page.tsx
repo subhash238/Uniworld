@@ -192,6 +192,29 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* How we work */}
+      <section className="py-10 md:py-14">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">How we work</p>
+          <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">From first call to long-term support</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Security isn't a one-time sale for us — it's a relationship. Here's how we work with every dealer, integrator and customer.</p>
+          <ol className="mt-8 grid gap-5 md:grid-cols-3">
+            {[
+              { step: "01", title: "Consult & recommend", text: "We listen first. Site type, coverage goals and budget decide the product mix — not what's sitting in our warehouse. You get honest advice on cameras, recorders, storage and networking that actually fits the job." },
+              { step: "02", title: "Supply & support", text: "Stock that's actually available, delivered on time through our dealer network. Our team helps installers with setup, configuration and on-site questions so projects go live without drama." },
+              { step: "03", title: "Stay & service", text: "After the sale we stay reachable — warranty help, replacements, firmware updates and technical guidance. That's how one-time buyers become long-term partners." },
+            ].map((item) => (
+              <li key={item.step} className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-lg">
+                <span className="absolute -right-2 -top-4 text-7xl font-extrabold text-[#e31e24]/[0.07]">{item.step}</span>
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e31e24]/10 text-sm font-extrabold text-[#e31e24]">{item.step}</span>
+                <h3 className="mt-4 text-base font-bold text-[#1b2a4a]">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{item.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
       {/* Journey timeline */}
       <section className="border-y border-slate-100 bg-[#f7f9fc] py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
