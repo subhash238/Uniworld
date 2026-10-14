@@ -47,6 +47,15 @@ const story = [
   "Since 2009, Uniworld Vision Pvt. Ltd. has stood for one thing: reliable security, honestly delivered. What began as a regional distribution business in Patna has grown into a security technology company serving Bihar, Jharkhand, West Bengal, Odisha and Nepal.",
   "Along the way we became trusted distribution partners for globally recognized brands — CP PLUS, Dahua Technology and Hikvision — before launching our own UNIWORLD line of cameras, recorders and networking products in 2023.",
   "Today we work alongside dealers, system integrators, enterprises and end users — pairing the right product with honest advice, and backing every sale with responsive technical support.",
+  "Our growth has never come from pushing boxes. It comes from standing behind them — helping a dealer pick the right camera for a site, walking an installer through a tricky setup, and being reachable when something goes wrong at 9 PM on a Sunday.",
+  "From a single Patna office to a multi-state network with our own manufacturing brand, every step has been built the same way: real products, fair prices and support you can count on. That is what keeps our partners — and their customers — coming back.",
+];
+
+const storyHighlights = [
+  "Authorized distributor for CP PLUS, Dahua and Hikvision",
+  "Own manufacturing brand — UNIWORLD cameras, recorders and accessories",
+  "Dealer and system-integrator network across Eastern India and Nepal",
+  "Technical guidance and after-sales support on every order",
 ];
 
 const milestones = [
@@ -160,6 +169,14 @@ export default function AboutPage() {
             <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-600">
               {story.map((paragraph) => <p key={paragraph.slice(0, 20)}>{paragraph}</p>)}
             </div>
+            <ul className="mt-5 space-y-2.5 border-l-2 border-[#e31e24]/30 pl-4">
+              {storyHighlights.map((highlight) => (
+                <li key={highlight} className="flex items-start gap-2.5 text-sm font-medium leading-6 text-slate-700">
+                  <Check size={16} className="mt-1 shrink-0 text-[#e31e24]" aria-hidden="true" />
+                  <span>{highlight}</span>
+                </li>
+              ))}
+            </ul>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/products" className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white transition hover:bg-[#c9181d]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
               <Link href="/dealers" className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-slate-300 px-5 text-sm font-bold text-[#1b2a4a] transition hover:border-[#1b2a4a]">Become a dealer</Link>
