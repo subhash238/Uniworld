@@ -161,7 +161,7 @@ export default function AboutPage() {
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fdf3ec] p-2 shadow-[0_30px_60px_-15px_rgba(16,29,51,0.3)] ring-1 ring-slate-200">
               <Image src="/about/company-journey.png" alt="Uniworld Vision journey of growth" width={800} height={560} priority sizes="(max-width: 1024px) 90vw, 520px" className="mx-auto h-auto w-full rounded-xl object-cover" />
             </div>
-            <div className="absolute -right-3 top-5 rotate-2 rounded-xl bg-[#e31e24] px-4 py-2.5 text-white shadow-lg transition hover:rotate-0 sm:-right-5">
+            <div className="absolute -top-7 right-6 rotate-2 rounded-xl bg-[#e31e24] px-4 py-2.5 text-white shadow-lg transition hover:rotate-0">
               <p className="text-lg font-extrabold leading-none">2009</p>
               <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/85">Est. Patna</p>
             </div>
