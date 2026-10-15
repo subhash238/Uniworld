@@ -169,13 +169,19 @@ const addProductImages = async (req, res) => {
       return res.status(400).json({ message: "No images provided" });
     }
 
-    const imagePromises = req.files.map(async (file) => {
+    // If the product has no primary image (e.g. it was deleted), the first new upload becomes primary
+    const hasPrimary = await prisma.productImage.findFirst({
+      where: { productId: req.params.id, isPrimary: true },
+      select: { id: true },
+    });
+
+    const imagePromises = req.files.map(async (file, index) => {
       const result = await uploadToCloudinary(file.buffer, "uniworld/products");
       return prisma.productImage.create({
         data: {
           url: result.secure_url,
           publicId: result.public_id,
-          isPrimary: false,
+          isPrimary: !hasPrimary && index === 0,
           productId: req.params.id,
         },
       });
