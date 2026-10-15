@@ -71,7 +71,7 @@ export default function DealersPage() {
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white transition hover:bg-[#c9181d]"
               >
-                <FiDownload size={16} /> Download form (PDF)
+                <FiDownload size={16} /> Download and Submit
               </a>
               <p className="mt-3 text-xs leading-5 text-slate-400">
                 Fill the form and share it with us — our team will review your application and get back to you.
