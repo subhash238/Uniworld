@@ -100,12 +100,35 @@ const strengths = [
   { icon: Headset, title: "Dedicated support", description: "Real technical guidance and responsive after-sales service on every order." },
 ];
 
-const mission = [
-  "Manufacture high-quality surveillance products",
-  "Keep advanced security affordable and accessible",
-  "Empower dealers, distributors and partners",
-  "Keep innovating with emerging technology",
-  "Build safer homes, businesses and communities",
+const missionStatement =
+  "To make reliable security reachable for everyone — from a single shop counter in a small town to the largest institutions in the region — by manufacturing quality products, backing them with honest service, and growing the dealers and partners who deliver them.";
+
+const missionPillars = [
+  {
+    title: "Manufacture products that earn trust",
+    description:
+      "Every UNIWORLD camera, recorder and networking product is built and tested for real conditions — power cuts, dust, heat and long hours — so customers get equipment that simply works, day after day.",
+  },
+  {
+    title: "Keep advanced security affordable",
+    description:
+      "Good surveillance should not be a luxury. We keep modern technology — IP cameras, AI-ready NVRs, PoE systems — priced so a small shop can protect itself as confidently as a large enterprise.",
+  },
+  {
+    title: "Grow with our dealers and partners",
+    description:
+      "Our dealer network across Eastern India and Nepal is the heart of Uniworld. We support partners with fair pricing, ready stock, product training and marketing help — when they grow, we grow.",
+  },
+  {
+    title: "Stand behind every product we sell",
+    description:
+      "A security product is only as good as the support behind it. Our team answers calls, guides installations and resolves warranty issues quickly — so customers and installers are never left stranded.",
+  },
+  {
+    title: "Build safer homes, businesses and communities",
+    description:
+      "Behind every camera is something worth protecting — a family's home, a worker's livelihood, a school's children. That purpose drives every decision we make, from product design to the last service call.",
+  },
 ];
 
 const values = [
@@ -283,23 +306,12 @@ export default function AboutPage() {
             ))}
           </ul>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#e31e24]/10 text-[#e31e24]"><Eye size={22} aria-hidden="true" /></span>
-                <h3 className="text-lg font-bold text-[#1b2a4a]">Our vision</h3>
-              </div>
-              <p className="mt-4 text-sm leading-7 text-slate-600">To become one of India's most trusted security technology brands — the name people reach for when they need protection they never have to second-guess.</p>
+          <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#e31e24]/10 text-[#e31e24]"><Eye size={22} aria-hidden="true" /></span>
+              <h3 className="text-lg font-bold text-[#1b2a4a]">Our vision</h3>
             </div>
-            <div className="rounded-2xl bg-[#1b2a4a] p-6 text-white sm:p-8">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-[#ff9c54]"><Target size={22} aria-hidden="true" /></span>
-                <h3 className="text-lg font-bold">Our mission</h3>
-              </div>
-              <ul className="mt-4 space-y-2.5">
-                {mission.map((item) => <li key={item} className="flex items-start gap-2.5 text-sm leading-6 text-slate-200"><Check size={16} className="mt-1 shrink-0 text-[#ff9c54]" aria-hidden="true" /><span>{item}</span></li>)}
-              </ul>
-            </div>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">To become one of India's most trusted security technology brands — the name people reach for when they need protection they never have to second-guess. A brand known not just for the products it sells, but for the partners it builds and the promises it keeps.</p>
           </div>
 
           <ul className="mt-6 flex flex-wrap gap-2.5">
@@ -309,6 +321,31 @@ export default function AboutPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* Mission */}
+      <section className="relative overflow-hidden bg-[#101d33] py-12 text-white md:py-16">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(227,30,36,0.18),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(49,76,116,0.55),transparent_60%)]" />
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="max-w-3xl">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#ff9c54]"><Target size={15} aria-hidden="true" />Our mission</p>
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">What drives us, <span className="text-[#ff9c54]">every single day</span></h2>
+            <p className="mt-5 border-l-2 border-[#ff9c54]/60 pl-5 text-base leading-8 text-slate-200 sm:text-lg">{missionStatement}</p>
+          </div>
+          <ol className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {missionPillars.map((pillar, index) => (
+              <li key={pillar.title} className={`group rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur transition hover:border-[#ff9c54]/40 hover:bg-white/[0.09] ${index === missionPillars.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}`}>
+                <span className="text-sm font-extrabold tracking-widest text-[#ff9c54]/80">{String(index + 1).padStart(2, "0")}</span>
+                <h3 className="mt-3 text-lg font-bold leading-snug">{pillar.title}</h3>
+                <p className="mt-2.5 text-sm leading-7 text-slate-300">{pillar.description}</p>
+              </li>
+            ))}
+            <li className="flex flex-col justify-center rounded-2xl border border-[#e31e24]/40 bg-[#e31e24]/10 p-6">
+              <p className="text-lg font-bold leading-snug">"When a Uniworld camera goes up somewhere, someone sleeps easier."</p>
+              <p className="mt-3 text-sm font-medium text-[#ff9c54]">— The promise we work by</p>
+            </li>
+          </ol>
         </div>
       </section>
 
