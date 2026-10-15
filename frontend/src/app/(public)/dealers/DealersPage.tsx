@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
-import { FiUser, FiPhone, FiMapPin } from "react-icons/fi";
+import { FiUser, FiPhone, FiMapPin, FiDownload, FiCheckCircle } from "react-icons/fi";
 
 interface Dealer {
   id: string;
@@ -43,6 +43,43 @@ export default function DealersPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Our Authorized Dealers &amp; Distributors in Bihar</h1>
+
+      <section className="mb-10 overflow-hidden rounded-2xl bg-[#101d33] text-white">
+        <div className="relative p-6 sm:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,156,84,0.18),transparent_55%)]" />
+          <div className="relative grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#ff9c54]">Partner with Uniworld</p>
+              <h2 className="mt-2 text-2xl font-extrabold sm:text-3xl">Become an authorized dealer</h2>
+              <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">
+                Join our dealer and distributor network across Bihar, Jharkhand, West Bengal, Odisha and Nepal.
+                Download the credit application form, fill it in, and send it to our team along with your
+                GST copy, PAN copy, Aadhaar copy and last 3 months' bank statement.
+              </p>
+              <ul className="mt-4 grid gap-2 text-sm text-slate-200 sm:grid-cols-2">
+                {["Copy of GST number", "Copy of PAN", "Copy of Aadhaar", "Last 3 months bank statement"].map((doc) => (
+                  <li key={doc} className="flex items-center gap-2"><FiCheckCircle size={15} className="shrink-0 text-[#ff9c54]" /> {doc}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6">
+              <h3 className="text-lg font-bold">Dealer registration form</h3>
+              <p className="mt-1.5 text-sm leading-6 text-slate-300">Credit application for a business account (PDF).</p>
+              <a
+                href="/downloads/dealer-registration-form.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white transition hover:bg-[#c9181d]"
+              >
+                <FiDownload size={16} /> Download and Submit
+              </a>
+              <p className="mt-3 text-xs leading-5 text-slate-400">
+                Fill the form and share it with us — our team will review your application and get back to you.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {dealers.length === 0 ? (
         <p className="text-center text-gray-500 py-10">No dealers listed yet.</p>
