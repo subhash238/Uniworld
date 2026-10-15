@@ -11,6 +11,11 @@ const sendContactNotification = async (inquiry) => {
     host: SMTP_HOST,
     port: Number(process.env.SMTP_PORT || 587),
     secure: process.env.SMTP_SECURE === "true",
+    // Some servers (e.g. Rediffmail Pro) reject the default local machine
+    // name in the HELO/EHLO greeting, so identify with the sender's domain.
+    name:
+      process.env.SMTP_NAME ||
+      (SMTP_USER.includes("@") ? SMTP_USER.split("@")[1] : undefined),
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
 
