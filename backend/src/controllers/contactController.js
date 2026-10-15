@@ -9,14 +9,13 @@ const createInquiry = async (req, res) => {
       data: { name, email, phone, subject, message },
     });
 
-    let emailSent = false;
-    try {
-      emailSent = await sendContactNotification(inquiry);
-    } catch (emailError) {
+    // Respond immediately — the notification goes out in the background so a
+    // slow or unreachable SMTP server can't hang the request (504s upstream).
+    sendContactNotification(inquiry).catch((emailError) => {
       console.error("Contact inquiry email notification failed:", emailError.message);
-    }
+    });
 
-    res.status(201).json({ message: "Inquiry submitted successfully", inquiry, emailSent });
+    res.status(201).json({ message: "Inquiry submitted successfully", inquiry, emailQueued: true });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
