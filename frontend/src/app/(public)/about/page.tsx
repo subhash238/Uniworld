@@ -175,34 +175,42 @@ export default function AboutPage() {
       </section>
 
       {/* Story */}
-      <section className="py-10 md:py-14">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
+      <section className="relative overflow-hidden py-12 md:py-16">
+        <div className="pointer-events-none absolute -left-40 top-16 h-72 w-72 rounded-full bg-[#e31e24]/[0.06] blur-3xl" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <figure className="relative order-last lg:order-first">
-            <div className="absolute -left-3 -top-3 h-full w-full rounded-2xl bg-[#e31e24]/10" />
-            <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-              <Image src="/about/company.jpeg" alt="Uniworld Vision team at a company event" width={447} height={447} priority sizes="(max-width: 1024px) 90vw, 480px" className="mx-auto h-auto w-full max-w-lg object-contain" />
+            <div className="absolute -left-4 -top-4 h-24 w-24 rounded-tl-2xl border-l-4 border-t-4 border-[#ff9c54]/60" />
+            <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-br-2xl border-b-4 border-r-4 border-[#e31e24]/50" />
+            <div className="relative overflow-hidden rounded-2xl bg-[#101d33] p-2 shadow-[0_30px_60px_-15px_rgba(16,29,51,0.35)]">
+              <Image src="/about/company.jpeg" alt="Uniworld Vision team at a company event" width={447} height={447} priority sizes="(max-width: 1024px) 90vw, 480px" className="mx-auto h-auto w-full rounded-xl object-contain" />
             </div>
-            <figcaption className="relative -mt-6 ml-4 inline-block rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-lg">
+            <div className="absolute -right-3 top-6 rounded-xl bg-[#e31e24] px-4 py-2.5 text-white shadow-lg sm:-right-5">
+              <p className="text-lg font-extrabold leading-none">2009</p>
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/85">Est. Patna</p>
+            </div>
+            <figcaption className="relative -mt-8 ml-4 inline-block max-w-[75%] rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-xl">
               Our team, our partners — one mission.
             </figcaption>
           </figure>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">Our story</p>
-            <h2 className="mt-2 text-2xl font-bold leading-tight text-[#1b2a4a] sm:text-3xl">Built on trust, grown on performance</h2>
+            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]"><span className="h-px w-8 bg-[#e31e24]" />Our story</p>
+            <h2 className="mt-2 text-2xl font-extrabold leading-tight text-[#1b2a4a] sm:text-[2rem]">Built on trust,<br />grown on performance</h2>
             <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-600">
-              {story.map((paragraph) => <p key={paragraph.slice(0, 20)}>{paragraph}</p>)}
+              {story.map((paragraph, index) => (
+                <p key={paragraph.slice(0, 20)} className={index === 0 ? "text-base font-medium leading-7 text-[#1b2a4a]" : undefined}>{paragraph}</p>
+              ))}
             </div>
-            <ul className="mt-5 space-y-2.5 border-l-2 border-[#e31e24]/30 pl-4">
+            <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
               {storyHighlights.map((highlight) => (
-                <li key={highlight} className="flex items-start gap-2.5 text-sm font-medium leading-6 text-slate-700">
-                  <Check size={16} className="mt-1 shrink-0 text-[#e31e24]" aria-hidden="true" />
+                <li key={highlight} className="flex items-start gap-2.5 rounded-lg border border-slate-200 bg-[#f7f9fc] px-3.5 py-3 text-[13px] font-medium leading-5 text-slate-700">
+                  <Check size={15} className="mt-0.5 shrink-0 text-[#e31e24]" aria-hidden="true" />
                   <span>{highlight}</span>
                 </li>
               ))}
             </ul>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/products" className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white transition hover:bg-[#c9181d]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
-              <Link href="/dealers" className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-slate-300 px-5 text-sm font-bold text-[#1b2a4a] transition hover:border-[#1b2a4a]">Become a dealer</Link>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/products" className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white shadow-[0_10px_25px_-8px_rgba(227,30,36,0.6)] transition hover:-translate-y-0.5 hover:bg-[#c9181d]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
+              <Link href="/dealers" className="inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-slate-200 px-5 text-sm font-bold text-[#1b2a4a] transition hover:-translate-y-0.5 hover:border-[#1b2a4a]">Become a dealer</Link>
             </div>
           </div>
         </div>
