@@ -14,6 +14,18 @@ const upload = multer({
   },
 });
 
+const uploadBanner = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed"), false);
+    }
+  },
+});
+
 const uploadPdf = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 },
@@ -43,4 +55,4 @@ const uploadGallery = multer({
   },
 });
 
-module.exports = { upload, uploadPdf, uploadDownload, uploadGallery };
+module.exports = { upload, uploadBanner, uploadPdf, uploadDownload, uploadGallery };

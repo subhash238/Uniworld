@@ -47,7 +47,7 @@ app.get("/api/health", (req, res) => {
 app.use((err, req, res, next) => {
   // Multer errors (file too large, too many files, wrong type) -> readable 4xx JSON
   if (err.code === "LIMIT_FILE_SIZE") {
-    return res.status(413).json({ message: "File is too large — product images must be under 1 MB each, datasheets under 10 MB" });
+    return res.status(413).json({ message: "File is too large — product images must be under 1 MB each, banners under 5 MB, datasheets under 10 MB" });
   }
   if (err.name === "MulterError") {
     return res.status(400).json({ message: `Upload failed: ${err.message}` });
