@@ -17,6 +17,11 @@ const sendContactNotification = async (inquiry) => {
       process.env.SMTP_NAME ||
       (SMTP_USER.includes("@") ? SMTP_USER.split("@")[1] : undefined),
     auth: { user: SMTP_USER, pass: SMTP_PASS },
+    // Fail fast instead of hanging the request when the mail server is
+    // unreachable (e.g. outbound SMTP blocked on the host).
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
   });
 
   await transporter.sendMail({
