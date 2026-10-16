@@ -268,7 +268,16 @@ const uploadDatasheet = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "No file provided" });
 
-    const result = await uploadToCloudinary(req.file.buffer, "uniworld/datasheets", "raw");
+    // Keep the original filename (and .pdf extension) in the Cloudinary URL —
+    // extensionless raw URLs download as unknown/corrupt files on Windows.
+    const baseName = (req.file.originalname || "datasheet")
+      .replace(/\.[^.]+$/, "")
+      .replace(/[^a-zA-Z0-9_-]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "datasheet";
+    const result = await uploadToCloudinary(req.file.buffer, "uniworld/datasheets", "raw", {
+      public_id: `${Date.now()}-${baseName}`,
+      format: "pdf",
+    });
     await prisma.product.update({
       where: { id: req.params.id },
       data: { datasheet: result.secure_url },
