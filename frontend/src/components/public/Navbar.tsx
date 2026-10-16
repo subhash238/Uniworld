@@ -145,6 +145,14 @@ const defaultCategories: Category[] = [
   },
 ];
 
+const distributionBrands = [
+  { name: "CP PLUS", url: "https://www.cpplusworld.com" },
+  { name: "Dahua", url: "https://www.dahuasecurity.com" },
+  { name: "Western Digital (WD)", url: "https://www.westerndigital.com" },
+  { name: "Hikvision", url: "https://www.hikvision.com" },
+  { name: "PARMA", url: "https://www.parma.co.in" },
+];
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showMobileCategories, setShowMobileCategories] = useState(false);
@@ -154,11 +162,15 @@ export default function Navbar() {
 
   const [showSupportMenu, setShowSupportMenu] = useState(false);
   const [showMobileSupport, setShowMobileSupport] = useState(false);
+  const [showDistMenu, setShowDistMenu] = useState(false);
+  const [showMobileDist, setShowMobileDist] = useState(false);
 
   const megaMenuTimeout = useRef<NodeJS.Timeout | null>(null);
   const megaMenuContainerRef = useRef<HTMLDivElement>(null);
   const supportMenuTimeout = useRef<NodeJS.Timeout | null>(null);
   const supportMenuContainerRef = useRef<HTMLDivElement>(null);
+  const distMenuTimeout = useRef<NodeJS.Timeout | null>(null);
+  const distMenuContainerRef = useRef<HTMLDivElement>(null);
 
   // Load categories from backend API
   useEffect(() => {
@@ -196,12 +208,19 @@ export default function Navbar() {
       ) {
         setShowSupportMenu(false);
       }
+      if (
+        distMenuContainerRef.current &&
+        !distMenuContainerRef.current.contains(event.target as Node)
+      ) {
+        setShowDistMenu(false);
+      }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setShowMegaMenu(false);
         setShowSupportMenu(false);
+        setShowDistMenu(false);
       }
     };
 
@@ -243,6 +262,17 @@ export default function Navbar() {
   const handleSupportMouseLeave = () => {
     supportMenuTimeout.current = setTimeout(() => {
       setShowSupportMenu(false);
+    }, 200);
+  };
+
+  const handleDistMouseEnter = () => {
+    if (distMenuTimeout.current) clearTimeout(distMenuTimeout.current);
+    setShowDistMenu(true);
+  };
+
+  const handleDistMouseLeave = () => {
+    distMenuTimeout.current = setTimeout(() => {
+      setShowDistMenu(false);
     }, 200);
   };
 
@@ -517,6 +547,58 @@ export default function Navbar() {
               >
                 Dealers
               </Link>
+
+              {/* DISTRIBUTION - brand partner links */}
+              <div
+                ref={distMenuContainerRef}
+                className="relative"
+                onMouseEnter={handleDistMouseEnter}
+                onMouseLeave={handleDistMouseLeave}
+              >
+                <button
+                  type="button"
+                  onClick={() => setShowDistMenu((prev) => !prev)}
+                  onFocus={handleDistMouseEnter}
+                  className={`group relative flex items-center gap-1.5 py-4 text-[15px] font-medium transition-colors focus:outline-none ${
+                    showDistMenu ? "text-[#e31e24]" : "text-[#3c444b] hover:text-[#e31e24]"
+                  }`}
+                  aria-expanded={showDistMenu}
+                  aria-haspopup="true"
+                >
+                  <span>Distribution</span>
+                  <FiChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 ${
+                      showDistMenu ? "rotate-180 text-[#e31e24]" : "text-gray-500 group-hover:text-[#e31e24]"
+                    }`}
+                  />
+                </button>
+
+                {showDistMenu && (
+                  <div className="absolute left-1/2 top-full z-50 -translate-x-1/2 pt-[10px]">
+                    <div className="w-[240px] border-t-[3px] border-[#e31e24] bg-white px-6 py-5 shadow-[0_25px_60px_rgba(0,0,0,0.18)] animate-fadeIn">
+                      <h3 className="mb-2 text-[15px] font-bold tracking-tight text-gray-900">Our brand partners</h3>
+                      <ul className="space-y-1.5">
+                        {distributionBrands.map((brand) => (
+                          <li key={brand.name}>
+                            <a
+                              href={brand.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => setShowDistMenu(false)}
+                              className="group flex items-center gap-1.5 text-[13.5px] leading-snug text-[#4b5563] transition-colors hover:text-[#e31e24]"
+                            >
+                              <span>{brand.name}</span>
+                              <FiArrowUpRight size={13} className="text-gray-400 transition-colors group-hover:text-[#e31e24]" aria-hidden="true" />
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* SUPPORT - CP PLUS STYLE DROPDOWN (positioned against the nav links row) */}
               <div
                 ref={supportMenuContainerRef}
@@ -683,6 +765,35 @@ export default function Navbar() {
               >
                 Dealers
               </Link>
+              <button
+                type="button"
+                onClick={() => setShowMobileDist((visible) => !visible)}
+                className="flex w-full items-center justify-between border-b border-white/10 px-3 py-3 text-left text-sm font-semibold text-white/85 transition-colors hover:text-[#f5a55f]"
+                aria-expanded={showMobileDist}
+              >
+                Distribution
+                <FiChevronDown
+                  size={14}
+                  className={`transition-transform ${showMobileDist ? "rotate-180" : ""}`}
+                />
+              </button>
+              {showMobileDist && (
+                <div className="space-y-1 border-l border-[#e31e24]/60 py-2 pl-4">
+                  {distributionBrands.map((brand) => (
+                    <a
+                      key={brand.name}
+                      href={brand.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 py-1.5 text-sm text-slate-300 transition-colors hover:text-[#f5a55f]"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {brand.name}
+                      <FiArrowUpRight size={12} aria-hidden="true" />
+                    </a>
+                  ))}
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => setShowMobileSupport((visible) => !visible)}
