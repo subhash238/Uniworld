@@ -268,15 +268,16 @@ const uploadDatasheet = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "No file provided" });
 
-    // Keep the original filename (and .pdf extension) in the Cloudinary URL —
-    // extensionless raw URLs download as unknown/corrupt files on Windows.
+    // Upload PDFs as the "image" resource type — Cloudinary blocks delivery of
+    // PDFs uploaded as "raw" on free plans (401 "deny or ACL failure"), which
+    // browsers then save as a corrupt/unopenable file. Image-type delivery has
+    // no such restriction and the resulting URL already ends in .pdf.
     const baseName = (req.file.originalname || "datasheet")
       .replace(/\.[^.]+$/, "")
       .replace(/[^a-zA-Z0-9_-]+/g, "-")
       .replace(/^-+|-+$/g, "") || "datasheet";
-    const result = await uploadToCloudinary(req.file.buffer, "uniworld/datasheets", "raw", {
+    const result = await uploadToCloudinary(req.file.buffer, "uniworld/datasheets", "image", {
       public_id: `${Date.now()}-${baseName}`,
-      format: "pdf",
     });
     await prisma.product.update({
       where: { id: req.params.id },
