@@ -221,6 +221,19 @@ export default function EditProductPage() {
     );
 
     setDatasheet(res.data.url);
+    toast.success("Datasheet uploaded");
+  };
+
+  const removeDatasheet = async () => {
+    if (!confirm("Remove this datasheet? It will be deleted permanently.")) return;
+    try {
+      await api.delete(`/products/${params.id}/datasheet`);
+      setDatasheet(null);
+      setDatasheetFile(null);
+      toast.success("Datasheet removed");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to remove datasheet");
+    }
   };
 
 
@@ -535,6 +548,14 @@ export default function EditProductPage() {
                   </a>
                 </div>
               </div>
+
+              <button
+                type="button"
+                onClick={removeDatasheet}
+                className="flex items-center gap-1.5 text-sm text-red-600 hover:text-red-800"
+              >
+                <FiTrash2 size={15} /> Remove
+              </button>
             </div>
           ) : (
             <p className="text-sm text-gray-500 mb-4">No datasheet uploaded</p>
@@ -566,7 +587,7 @@ export default function EditProductPage() {
             <label className="block border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-primary">
               <FiUpload className="mx-auto text-gray-400 mb-2" size={25} />
 
-              <p className="text-sm text-gray-500">Upload New Datasheet</p>
+              <p className="text-sm text-gray-500">{datasheet ? "Upload to replace current datasheet" : "Upload New Datasheet"}</p>
 
               <input
                 type="file"

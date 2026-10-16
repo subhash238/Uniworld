@@ -264,9 +264,34 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// Extract the Cloudinary public_id from a stored datasheet URL so the old
+// asset can be destroyed when the datasheet is replaced or removed.
+// e.g. https://res.cloudinary.com/<cloud>/image/upload/v123/uniworld/datasheets/abc.pdf
+//   -> uniworld/datasheets/abc (resource_type inferred from the URL segment).
+const datasheetAssetFromUrl = (url) => {
+  const match = url?.match(/\/(image|raw|video)\/upload\/(?:v\d+\/)?(.+?)(\.[a-zA-Z0-9]+)?$/);
+  if (!match) return null;
+  return { resourceType: match[1], publicId: match[2] };
+};
+
+const destroyDatasheetAsset = async (url) => {
+  const asset = datasheetAssetFromUrl(url);
+  if (!asset) return;
+  try {
+    await deleteFromCloudinary(asset.publicId, asset.resourceType);
+  } catch (error) {
+    console.error("Failed to delete old datasheet from Cloudinary:", error.message);
+  }
+};
+
 const uploadDatasheet = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "No file provided" });
+
+    const existing = await prisma.product.findUnique({
+      where: { id: req.params.id },
+      select: { datasheet: true },
+    });
 
     // Upload PDFs as the "image" resource type — Cloudinary blocks delivery of
     // PDFs uploaded as "raw" on free plans (401 "deny or ACL failure"), which
@@ -284,6 +309,9 @@ const uploadDatasheet = async (req, res) => {
       data: { datasheet: result.secure_url },
     });
 
+    // Drop the replaced file from Cloudinary — don't orphan it.
+    if (existing?.datasheet) await destroyDatasheetAsset(existing.datasheet);
+
     res.json({ message: "Datasheet uploaded", url: result.secure_url });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -292,10 +320,15 @@ const uploadDatasheet = async (req, res) => {
 
 const deleteDatasheet = async (req, res) => {
   try {
+    const existing = await prisma.product.findUnique({
+      where: { id: req.params.id },
+      select: { datasheet: true },
+    });
     await prisma.product.update({
       where: { id: req.params.id },
       data: { datasheet: null },
     });
+    if (existing?.datasheet) await destroyDatasheetAsset(existing.datasheet);
     res.json({ message: "Datasheet removed" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
