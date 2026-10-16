@@ -46,6 +46,14 @@ export default function AdminBannersPage() {
     setImageValidation(null);
     if (!selectedImage) return;
 
+    if (selectedImage.size > 5 * 1024 * 1024) {
+      setImageValidation({
+        valid: false,
+        message: `Image too large — max 5 MB (${selectedImage.name}: ${(selectedImage.size / 1024 / 1024).toFixed(1)} MB)`,
+      });
+      return;
+    }
+
     setIsValidatingImage(true);
     try {
       const bitmap = await createImageBitmap(selectedImage);
@@ -130,7 +138,7 @@ export default function AdminBannersPage() {
             <div className="space-y-1.5">
               <label htmlFor="banner-image" className="block text-sm font-medium text-gray-700">Banner image · exactly 1900 x 568 px</label>
               <input id="banner-image" type="file" accept="image/*" required onChange={handleImageChange} className="text-sm" aria-describedby="banner-image-guidance banner-image-status" />
-              <p id="banner-image-guidance" className="text-xs text-gray-500">Other dimensions will be rejected to prevent cropping or distortion.</p>
+              <p id="banner-image-guidance" className="text-xs text-gray-500">Max 5 MB. Other dimensions will be rejected to prevent cropping or distortion.</p>
               <p id="banner-image-status" aria-live="polite" className={`text-xs ${isValidatingImage ? "text-gray-500" : imageValidation?.valid ? "text-green-700" : imageValidation ? "text-red-600" : ""}`}>
                 {isValidatingImage ? "Checking image dimensions…" : imageValidation?.message || ""}
               </p>
