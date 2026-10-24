@@ -175,36 +175,66 @@ export default function AboutPage() {
       </section>
 
       {/* Story */}
-      <section className="py-10 md:py-14">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
-          <figure className="relative order-last lg:order-first">
-            <div className="absolute -left-3 -top-3 h-full w-full rounded-2xl bg-[#e31e24]/10" />
-            <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-              <Image src="/about/company.jpeg" alt="Uniworld Vision team at a company event" width={447} height={447} priority sizes="(max-width: 1024px) 90vw, 480px" className="mx-auto h-auto w-full max-w-lg object-contain" />
-            </div>
-            <figcaption className="relative -mt-6 ml-4 inline-block rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-lg">
-              Our team, our partners — one mission.
-            </figcaption>
-          </figure>
+      <section className="relative overflow-hidden bg-[#101d33] py-14 text-white md:py-20">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(227,30,36,0.18),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(49,76,116,0.6),transparent_50%)]" />
+        <div className="pointer-events-none absolute left-8 top-10 h-24 w-24 opacity-30" style={{ backgroundImage: "radial-gradient(#ff9c54 2px, transparent 2px)", backgroundSize: "12px 12px" }} />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">Our story</p>
-            <h2 className="mt-2 text-2xl font-bold leading-tight text-[#1b2a4a] sm:text-3xl">Built on trust, grown on performance</h2>
-            <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-600">
-              {story.map((paragraph) => <p key={paragraph.slice(0, 20)}>{paragraph}</p>)}
+            <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#ff9c54]"><span className="h-px w-10 bg-[#ff9c54]" />Our story</p>
+            <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-4xl">Built on trust,<br />grown on <span className="text-[#ff9c54]">performance</span></h2>
+            <div className="mt-5 space-y-4 text-[15px] leading-7 text-slate-300">
+              {story.map((paragraph, index) => (
+                <p key={paragraph.slice(0, 20)} className={index === 0 ? "border-l-2 border-[#ff9c54] pl-4 text-base font-medium leading-7 text-white" : undefined}>{paragraph}</p>
+              ))}
             </div>
-            <ul className="mt-5 space-y-2.5 border-l-2 border-[#e31e24]/30 pl-4">
+            <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
               {storyHighlights.map((highlight) => (
-                <li key={highlight} className="flex items-start gap-2.5 text-sm font-medium leading-6 text-slate-700">
-                  <Check size={16} className="mt-1 shrink-0 text-[#e31e24]" aria-hidden="true" />
+                <li key={highlight} className="flex items-start gap-2.5 rounded-lg border border-white/15 bg-white/[0.06] px-3.5 py-3 text-[13px] font-medium leading-5 text-slate-200 backdrop-blur-sm">
+                  <Check size={15} className="mt-0.5 shrink-0 text-[#ff9c54]" aria-hidden="true" />
                   <span>{highlight}</span>
                 </li>
               ))}
             </ul>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/products" className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white transition hover:bg-[#c9181d]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
-              <Link href="/dealers" className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-slate-300 px-5 text-sm font-bold text-[#1b2a4a] transition hover:border-[#1b2a4a]">Become a dealer</Link>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/products" className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#e31e24] px-5 text-sm font-bold text-white shadow-[0_10px_25px_-8px_rgba(227,30,36,0.6)] transition hover:-translate-y-0.5 hover:bg-[#c9181d]">Explore products <ArrowRight size={16} aria-hidden="true" /></Link>
+              <Link href="/dealers" className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/30 px-5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-[#101d33]">Become a dealer</Link>
             </div>
           </div>
+          <figure className="relative">
+            <div className="pointer-events-none absolute -inset-3 rounded-3xl bg-gradient-to-br from-[#ff9c54]/25 via-transparent to-[#e31e24]/25 blur-xl" />
+            <div className="relative overflow-hidden rounded-2xl bg-white p-2.5 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] ring-1 ring-white/20">
+              <Image src="/about/company-journey.png" alt="Uniworld Vision journey of growth" width={800} height={560} priority sizes="(max-width: 1024px) 90vw, 520px" className="mx-auto h-auto w-full rounded-xl object-cover" />
+            </div>
+            <div className="absolute -bottom-5 left-6 rounded-xl bg-[#e31e24] px-4 py-2.5 text-white shadow-lg">
+              <p className="text-lg font-extrabold leading-none">2009</p>
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/85">Est. Patna</p>
+            </div>
+            <figcaption className="sr-only">Our journey of growth — people, partnerships, a safer tomorrow.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      {/* How we work */}
+      <section className="py-10 md:py-14">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e31e24]">How we work</p>
+          <h2 className="mt-2 text-2xl font-bold text-[#1b2a4a] sm:text-3xl">From first call to long-term support</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">Security isn't a one-time sale for us — it's a relationship. Here's how we work with every dealer, integrator and customer.</p>
+          <ol className="mt-8 grid gap-5 md:grid-cols-3">
+            {[
+              { step: "01", title: "Consult & recommend", text: "We listen first. Site type, coverage goals and budget decide the product mix — not what's sitting in our warehouse. You get honest advice on cameras, recorders, storage and networking that actually fits the job." },
+              { step: "02", title: "Supply & support", text: "Stock that's actually available, delivered on time through our dealer network. Our team helps installers with setup, configuration and on-site questions so projects go live without drama." },
+              { step: "03", title: "Stay & service", text: "After the sale we stay reachable — warranty help, replacements, firmware updates and technical guidance. That's how one-time buyers become long-term partners." },
+            ].map((item) => (
+              <li key={item.step} className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-lg">
+                <span className="absolute -right-2 -top-4 text-7xl font-extrabold text-[#e31e24]/[0.07]">{item.step}</span>
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#e31e24]/10 text-sm font-extrabold text-[#e31e24]">{item.step}</span>
+                <h3 className="mt-4 text-base font-bold text-[#1b2a4a]">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{item.text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
