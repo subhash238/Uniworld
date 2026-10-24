@@ -150,7 +150,7 @@ const distributionBrands = [
   { name: "Dahua", url: "https://www.dahuasecurity.com", logo: "/brands/dahua.png" },
   { name: "Western Digital (WD)", url: "https://www.westerndigital.com", logo: "/brands/wd.png" },
   { name: "Hikvision", url: "https://www.hikvision.com", logo: "/brands/hikvision.png" },
-  { name: "PARMA", url: "https://www.parma.co.in", logo: "/brands/parma.png" },
+  { name: "PARMA", url: "https://www.pramaindia.in", logo: "/brands/parma.png" },
 ];
 
 export default function Navbar() {
@@ -576,9 +576,9 @@ export default function Navbar() {
 
                 {showDistMenu && (
                   <div className="absolute left-1/2 top-full z-50 -translate-x-1/2 pt-[10px]">
-                    <div className="w-[240px] border-t-[3px] border-[#e31e24] bg-white px-6 py-5 shadow-[0_25px_60px_rgba(0,0,0,0.18)] animate-fadeIn">
-                      <h3 className="mb-2 text-[15px] font-bold tracking-tight text-gray-900">Our brand partners</h3>
-                      <ul className="space-y-1.5">
+                    <div className="w-[260px] border-t-[3px] border-[#e31e24] bg-white px-5 py-5 shadow-[0_25px_60px_rgba(0,0,0,0.18)] animate-fadeIn">
+                      <h3 className="mb-3 text-[15px] font-bold tracking-tight text-gray-900">Our brand partners</h3>
+                      <ul className="space-y-1">
                         {distributionBrands.map((brand) => (
                           <li key={brand.name}>
                             <a
@@ -586,9 +586,11 @@ export default function Navbar() {
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={() => setShowDistMenu(false)}
-                              className="group flex items-center gap-2.5 text-[13.5px] leading-snug text-[#4b5563] transition-colors hover:text-[#e31e24]"
+                              className="group flex items-center gap-3 rounded-md px-2 py-2 text-[13.5px] font-medium leading-snug text-[#4b5563] transition-colors hover:bg-gray-50 hover:text-[#e31e24]"
                             >
-                              <img src={brand.logo} alt={`${brand.name} logo`} className="h-6 w-8 shrink-0 object-contain" />
+                              <span className="flex h-8 w-16 shrink-0 items-center justify-center">
+                                <img src={brand.logo} alt={`${brand.name} logo`} className="max-h-8 max-w-[64px] object-contain" />
+                              </span>
                               <span className="flex-1">{brand.name}</span>
                               <FiArrowUpRight size={13} className="text-gray-400 transition-colors group-hover:text-[#e31e24]" aria-hidden="true" />
                             </a>
@@ -786,10 +788,12 @@ export default function Navbar() {
                       href={brand.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 py-1.5 text-sm text-slate-300 transition-colors hover:text-[#f5a55f]"
+                      className="flex items-center gap-3 rounded-md px-2 py-2 text-sm text-slate-300 transition-colors hover:text-[#f5a55f]"
                       onClick={() => setIsOpen(false)}
                     >
-                      <img src={brand.logo} alt={`${brand.name} logo`} className="h-6 w-8 shrink-0 object-contain" />
+                      <span className="flex h-8 w-16 shrink-0 items-center justify-center rounded bg-white px-1">
+                        <img src={brand.logo} alt={`${brand.name} logo`} className="max-h-7 max-w-[56px] object-contain" />
+                      </span>
                       <span className="flex-1">{brand.name}</span>
                       <FiArrowUpRight size={12} aria-hidden="true" />
                     </a>
