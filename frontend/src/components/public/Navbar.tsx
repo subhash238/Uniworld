@@ -148,8 +148,8 @@ const defaultCategories: Category[] = [
 const distributionBrands = [
   { name: "CP PLUS", url: "https://www.cpplusworld.com", logo: "/brands/cpplus.png" },
   { name: "Dahua", url: "https://www.dahuasecurity.com", logo: "/brands/dahua.png" },
-  { name: "Western Digital (WD)", url: "https://www.westerndigital.com", logo: "/brands/wd.svg" },
-  { name: "Hikvision", url: "https://www.hikvision.com", logo: "/brands/hikvision.svg" },
+  { name: "Western Digital (WD)", url: "https://www.westerndigital.com", logo: "/brands/wd.png" },
+  { name: "Hikvision", url: "https://www.hikvision.com", logo: "/brands/hikvision.png" },
   { name: "PARMA", url: "https://www.parma.co.in", logo: "/brands/parma.png" },
 ];
 
