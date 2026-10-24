@@ -39,7 +39,7 @@ export const metadata = {
 const stats = [
   { number: "16+", label: "Years in security" },
   { number: "5+", label: "Regions served" },
-  { number: "1,000+", label: "Products delivered" },
+  { number: "10M+", label: "Products delivered" },
   { number: "24/7", label: "Technical support" },
 ];
 
