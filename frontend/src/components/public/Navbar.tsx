@@ -146,11 +146,11 @@ const defaultCategories: Category[] = [
 ];
 
 const distributionBrands = [
-  { name: "CP PLUS", url: "https://www.cpplusworld.com" },
-  { name: "Dahua", url: "https://www.dahuasecurity.com" },
-  { name: "Western Digital (WD)", url: "https://www.westerndigital.com" },
-  { name: "Hikvision", url: "https://www.hikvision.com" },
-  { name: "PARMA", url: "https://www.parma.co.in" },
+  { name: "CP PLUS", url: "https://www.cpplusworld.com", logo: "/brands/cpplus.png" },
+  { name: "Dahua", url: "https://www.dahuasecurity.com", logo: "/brands/dahua.png" },
+  { name: "Western Digital (WD)", url: "https://www.westerndigital.com", logo: "/brands/wd.png" },
+  { name: "Hikvision", url: "https://www.hikvision.com", logo: "/brands/hikvision.png" },
+  { name: "PARMA", url: "https://www.parma.co.in", logo: "/brands/parma.png" },
 ];
 
 export default function Navbar() {
@@ -586,9 +586,10 @@ export default function Navbar() {
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={() => setShowDistMenu(false)}
-                              className="group flex items-center gap-1.5 text-[13.5px] leading-snug text-[#4b5563] transition-colors hover:text-[#e31e24]"
+                              className="group flex items-center gap-2.5 text-[13.5px] leading-snug text-[#4b5563] transition-colors hover:text-[#e31e24]"
                             >
-                              <span>{brand.name}</span>
+                              <img src={brand.logo} alt={`${brand.name} logo`} className="h-6 w-6 shrink-0 object-contain" />
+                              <span className="flex-1">{brand.name}</span>
                               <FiArrowUpRight size={13} className="text-gray-400 transition-colors group-hover:text-[#e31e24]" aria-hidden="true" />
                             </a>
                           </li>
@@ -785,10 +786,11 @@ export default function Navbar() {
                       href={brand.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 py-1.5 text-sm text-slate-300 transition-colors hover:text-[#f5a55f]"
+                      className="flex items-center gap-2.5 py-1.5 text-sm text-slate-300 transition-colors hover:text-[#f5a55f]"
                       onClick={() => setIsOpen(false)}
                     >
-                      {brand.name}
+                      <img src={brand.logo} alt={`${brand.name} logo`} className="h-6 w-6 shrink-0 object-contain" />
+                      <span className="flex-1">{brand.name}</span>
                       <FiArrowUpRight size={12} aria-hidden="true" />
                     </a>
                   ))}
