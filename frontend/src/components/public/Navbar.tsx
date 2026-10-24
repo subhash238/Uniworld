@@ -148,8 +148,8 @@ const defaultCategories: Category[] = [
 const distributionBrands = [
   { name: "CP PLUS", url: "https://www.cpplusworld.com", logo: "/brands/cpplus.png" },
   { name: "Dahua", url: "https://www.dahuasecurity.com", logo: "/brands/dahua.png" },
-  { name: "Western Digital (WD)", url: "https://www.westerndigital.com", logo: "/brands/wd.png" },
-  { name: "Hikvision", url: "https://www.hikvision.com", logo: "/brands/hikvision.png" },
+  { name: "Western Digital (WD)", url: "https://www.westerndigital.com", logo: "/brands/wd.svg" },
+  { name: "Hikvision", url: "https://www.hikvision.com", logo: "/brands/hikvision.svg" },
   { name: "PARMA", url: "https://www.parma.co.in", logo: "/brands/parma.png" },
 ];
 
@@ -588,7 +588,7 @@ export default function Navbar() {
                               onClick={() => setShowDistMenu(false)}
                               className="group flex items-center gap-2.5 text-[13.5px] leading-snug text-[#4b5563] transition-colors hover:text-[#e31e24]"
                             >
-                              <img src={brand.logo} alt={`${brand.name} logo`} className="h-6 w-6 shrink-0 object-contain" />
+                              <img src={brand.logo} alt={`${brand.name} logo`} className="h-6 w-8 shrink-0 object-contain" />
                               <span className="flex-1">{brand.name}</span>
                               <FiArrowUpRight size={13} className="text-gray-400 transition-colors group-hover:text-[#e31e24]" aria-hidden="true" />
                             </a>
@@ -789,7 +789,7 @@ export default function Navbar() {
                       className="flex items-center gap-2.5 py-1.5 text-sm text-slate-300 transition-colors hover:text-[#f5a55f]"
                       onClick={() => setIsOpen(false)}
                     >
-                      <img src={brand.logo} alt={`${brand.name} logo`} className="h-6 w-6 shrink-0 object-contain" />
+                      <img src={brand.logo} alt={`${brand.name} logo`} className="h-6 w-8 shrink-0 object-contain" />
                       <span className="flex-1">{brand.name}</span>
                       <FiArrowUpRight size={12} aria-hidden="true" />
                     </a>
