@@ -16,13 +16,18 @@ const offerRoutes = require("./routes/offerRoutes");
 const supportDownloadRoutes = require("./routes/supportDownloadRoutes");
 const galleryRoutes = require("./routes/galleryRoutes");
 
+const path = require("path");
+
 const app = express();
+app.set("trust proxy", true);
 
 // Middleware
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use("/downloads", express.static(path.join(__dirname, "../uploads/downloads")));
 
 // Routes
 app.use("/api/auth", authRoutes);
