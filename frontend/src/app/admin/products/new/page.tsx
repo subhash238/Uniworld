@@ -56,9 +56,9 @@ export default function NewProductPage() {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const tooBig = files.filter((f) => f.size > 1024 * 1024);
+    const tooBig = files.filter((f) => f.size > 5 * 1024 * 1024);
     if (tooBig.length > 0) {
-      toast.error(`Image${tooBig.length > 1 ? "s" : ""} too large — max 1 MB each (${tooBig[0].name}: ${(tooBig[0].size / 1024 / 1024).toFixed(1)} MB)`);
+      toast.error(`Image${tooBig.length > 1 ? "s" : ""} too large — max 5 MB each (${tooBig[0].name}: ${(tooBig[0].size / 1024 / 1024).toFixed(1)} MB)`);
       e.target.value = "";
       return;
     }
@@ -79,7 +79,7 @@ export default function NewProductPage() {
 
   const uploadError = (error: any, fallback: string) =>
     error.response?.status === 413
-      ? "File too large — product images must be under 1 MB each (or check your server limit)"
+      ? "File too large — product images must be under 5 MB each (or check your server limit)"
       : error.response?.data?.message || fallback;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
