@@ -8,6 +8,7 @@ const DOWNLOAD_TYPES = [
   "user-manual",
   "certificate",
   "sira-certificate",
+  "brochure",
 ];
 
 const orderBy = [{ section: "asc" }, { order: "asc" }, { createdAt: "desc" }];
