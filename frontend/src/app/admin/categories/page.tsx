@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
-import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiPlus, FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
 
 interface Category {
   id: string;
@@ -20,6 +20,11 @@ interface Category {
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+
+  const filteredCategories = categories.filter((cat) =>
+    cat.name.toLowerCase().includes(query.trim().toLowerCase())
+  );
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -144,17 +149,29 @@ export default function AdminCategoriesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold">Categories</h1>
 
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center gap-2"
-        >
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search categories…"
+              className="w-56 rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-primary focus:outline-none"
+            />
+          </div>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center gap-2"
+          >
           <FiPlus />
 
           {showForm ? "Close" : "Add Category"}
-        </button>
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -297,7 +314,14 @@ export default function AdminCategoriesPage() {
           </thead>
 
           <tbody>
-            {categories.map((cat) => (
+            {filteredCategories.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                  {query ? `No categories matching "${query}"` : "No categories yet"}
+                </td>
+              </tr>
+            )}
+            {filteredCategories.map((cat) => (
               <tr key={cat.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">
                   {cat.image ? (

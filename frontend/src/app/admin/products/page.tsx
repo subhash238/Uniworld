@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
-import { FiPlus, FiEdit2, FiTrash2, FiCamera } from "react-icons/fi";
+import { FiPlus, FiEdit2, FiTrash2, FiCamera, FiSearch } from "react-icons/fi";
 
 interface Product {
   id: string;
@@ -23,14 +23,16 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    loadProducts();
-  }, [page]);
+    const timer = setTimeout(() => loadProducts(), 300);
+    return () => clearTimeout(timer);
+  }, [page, search]);
 
   const loadProducts = async () => {
     try {
-      const res = await api.get(`/products?page=${page}&limit=20`);
+      const res = await api.get(`/products?page=${page}&limit=20&search=${encodeURIComponent(search)}`);
       setProducts(res.data.products);
       setTotalPages(res.data.pagination.pages);
     } catch (error) {
@@ -53,11 +55,23 @@ export default function AdminProductsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold">Products</h1>
-        <Link href="/admin/products/new" className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center gap-2">
-          <FiPlus /> Add Product
-        </Link>
+        <div className="flex items-center gap-3 flex-1 justify-end min-w-[200px]">
+          <div className="relative w-full max-w-xs">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              placeholder="Search products…"
+              className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-primary focus:outline-none"
+            />
+          </div>
+          <Link href="/admin/products/new" className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap">
+            <FiPlus /> Add Product
+          </Link>
+        </div>
       </div>
 
       {loading ? (
@@ -80,6 +94,13 @@ export default function AdminProductsPage() {
                 </tr>
               </thead>
               <tbody>
+                {products.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                      {search ? `No products matching "${search}"` : "No products yet"}
+                    </td>
+                  </tr>
+                )}
                 {products.map((product) => (
                   <tr key={product.id} className="border-b hover:bg-gray-50">
                     <td className="px-4 py-3">

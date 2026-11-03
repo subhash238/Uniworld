@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
-import { FiPlus, FiEdit2, FiTrash2, FiX } from "react-icons/fi";
+import { FiPlus, FiEdit2, FiTrash2, FiX, FiSearch } from "react-icons/fi";
 
 interface Category {
   id: string;
@@ -24,6 +24,16 @@ interface SubCategory {
 export default function AdminSubCategoriesPage() {
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [query, setQuery] = useState("");
+
+  const filteredSubCategories = subCategories.filter((sub) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      sub.name.toLowerCase().includes(q) ||
+      sub.category.name.toLowerCase().includes(q)
+    );
+  });
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -102,14 +112,26 @@ export default function AdminSubCategoriesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold">Sub Categories</h1>
-        <button
-          onClick={() => { resetForm(); setShowForm(true); }}
-          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center gap-2"
-        >
-          <FiPlus size={18} /> Add Sub Category
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search sub-categories…"
+              className="w-56 rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-primary focus:outline-none"
+            />
+          </div>
+          <button
+            onClick={() => { resetForm(); setShowForm(true); }}
+            className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center gap-2"
+          >
+            <FiPlus size={18} /> Add Sub Category
+          </button>
+        </div>
       </div>
 
       {/* Form Modal */}
@@ -194,14 +216,14 @@ export default function AdminSubCategoriesPage() {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {subCategories.length === 0 ? (
+            {filteredSubCategories.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-10 text-center text-gray-400">
-                  No sub-categories yet. Click &quot;Add Sub Category&quot; to create one.
+                  {query ? `No sub-categories matching "${query}"` : <>No sub-categories yet. Click &quot;Add Sub Category&quot; to create one.</>}
                 </td>
               </tr>
             ) : (
-              subCategories.map((sub) => (
+              filteredSubCategories.map((sub) => (
                 <tr key={sub.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <span className={sub.parentId ? "font-medium pl-4" : "font-medium"}>

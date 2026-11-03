@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
-import { FiEdit2, FiExternalLink, FiImage, FiPlay, FiPlus, FiTrash2, FiX } from "react-icons/fi";
+import { FiEdit2, FiExternalLink, FiImage, FiPlay, FiPlus, FiSearch, FiTrash2, FiX } from "react-icons/fi";
 
 interface GalleryItem {
   id: string;
@@ -19,6 +19,11 @@ const emptyForm = { title: "", order: "0", isActive: true };
 
 export default function AdminGalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
+  const [query, setQuery] = useState("");
+
+  const filteredItems = items.filter((item) =>
+    item.title.toLowerCase().includes(query.trim().toLowerCase())
+  );
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -106,14 +111,26 @@ export default function AdminGalleryPage() {
           <h1 className="text-2xl font-bold text-slate-900">Gallery</h1>
           <p className="mt-1 text-sm text-slate-500">Photos and videos shown on the public Gallery page.</p>
         </div>
-        <button
-          type="button"
-          onClick={() => (showForm && !editingId ? resetForm() : (setEditingId(null), setForm(emptyForm), setFile(null), setShowForm(true)))}
-          className="inline-flex h-10 items-center gap-2 bg-primary px-4 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
-        >
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search gallery…"
+              className="h-10 w-56 border border-slate-300 pl-9 pr-3 text-sm outline-none focus:border-primary"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => (showForm && !editingId ? resetForm() : (setEditingId(null), setForm(emptyForm), setFile(null), setShowForm(true)))}
+            className="inline-flex h-10 items-center gap-2 bg-primary px-4 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+          >
           {showForm && !editingId ? <FiX /> : <FiPlus />}
           {showForm && !editingId ? "Close" : "Add media"}
-        </button>
+          </button>
+        </div>
       </div>
 
       {showForm && (
