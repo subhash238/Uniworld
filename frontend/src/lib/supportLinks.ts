@@ -14,6 +14,7 @@ export const supportGroups: SupportGroup[] = [
     title: "Download",
     links: [
       { slug: "certificate", title: "Certificate", description: "CE, FCC and RoHS compliance certificates for Uniworld products." },
+      { slug: "brochure", title: "Brochure", description: "Product and company brochures for Uniworld products." },
     ],
   },
   {
