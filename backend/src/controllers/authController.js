@@ -11,6 +11,13 @@ const register = async (req, res) => {
       return res.status(400).json({ message: "Admin already exists with this email" });
     }
 
+    // First admin bootstrapping only — once any admin exists, public
+    // registration is closed (accounts are managed by admins).
+    const adminCount = await prisma.admin.count();
+    if (adminCount > 0) {
+      return res.status(403).json({ message: "Registration is disabled" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const admin = await prisma.admin.create({
