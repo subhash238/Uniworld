@@ -1,5 +1,5 @@
 const prisma = require("../config/db");
-const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/cloudinary");
+const { deleteFromCloudinary } = require("../utils/cloudinary");
 
 const DOWNLOAD_TYPES = [
   "firmware",
@@ -14,14 +14,25 @@ const orderBy = [{ section: "asc" }, { order: "asc" }, { createdAt: "desc" }];
 
 const text = (value) => (typeof value === "string" ? value.trim() : "");
 
-const uploadFile = (file) =>
-  uploadToCloudinary(file.buffer, "uniworld/downloads", "raw", {
-    use_filename: true,
-    unique_filename: true,
-    filename_override: file.originalname,
-  });
+const path = require("path");
+const fs = require("fs");
 
-const removeFile = (publicId) => deleteFromCloudinary(publicId, "raw").catch(() => {});
+const downloadsDir = path.join(__dirname, "../../uploads/downloads");
+
+const fileUrlFor = (req, filename) => {
+  const base =
+    process.env.PUBLIC_API_URL || `${req.protocol}://${req.get("host")}`;
+  return `${base}/downloads/${filename}`;
+};
+
+const removeFile = (item) => {
+  if (!item?.publicId) return Promise.resolve();
+  if (item.fileUrl && item.fileUrl.includes("res.cloudinary.com")) {
+    return deleteFromCloudinary(item.publicId, "raw").catch(() => {});
+  }
+  const filePath = path.join(downloadsDir, path.basename(item.publicId));
+  return fs.promises.unlink(filePath).catch(() => {});
+};
 
 const getPublicDownloads = async (req, res) => {
   try {
@@ -61,16 +72,15 @@ const createDownload = async (req, res) => {
     if (!section) return res.status(400).json({ message: "Section is required" });
     if (!req.file) return res.status(400).json({ message: "File is required" });
 
-    const upload = await uploadFile(req.file);
-    uploadedPublicId = upload.public_id;
+    uploadedPublicId = req.file.filename;
 
     const item = await prisma.supportDownload.create({
       data: {
         title,
         type,
         section,
-        fileUrl: upload.secure_url,
-        publicId: upload.public_id,
+        fileUrl: fileUrlFor(req, req.file.filename),
+        publicId: req.file.filename,
         fileName: req.file.originalname,
         fileSize: req.file.size,
         isActive: req.body.isActive !== "false",
@@ -80,7 +90,7 @@ const createDownload = async (req, res) => {
 
     res.status(201).json({ message: "Download created", item });
   } catch (error) {
-    if (uploadedPublicId) await removeFile(uploadedPublicId);
+    if (uploadedPublicId) await removeFile({ publicId: uploadedPublicId });
     console.error("createDownload:", error);
     res.status(500).json({ message: "Failed to create download" });
   }
@@ -116,20 +126,19 @@ const updateDownload = async (req, res) => {
     }
 
     if (req.file) {
-      const upload = await uploadFile(req.file);
-      uploadedPublicId = upload.public_id;
-      data.fileUrl = upload.secure_url;
-      data.publicId = upload.public_id;
+      uploadedPublicId = req.file.filename;
+      data.fileUrl = fileUrlFor(req, req.file.filename);
+      data.publicId = req.file.filename;
       data.fileName = req.file.originalname;
       data.fileSize = req.file.size;
     }
 
     const item = await prisma.supportDownload.update({ where: { id: existing.id }, data });
-    if (uploadedPublicId) await removeFile(existing.publicId);
+    if (uploadedPublicId) await removeFile(existing);
 
     res.json({ message: "Download updated", item });
   } catch (error) {
-    if (uploadedPublicId) await removeFile(uploadedPublicId);
+    if (uploadedPublicId) await removeFile({ publicId: uploadedPublicId });
     console.error("updateDownload:", error);
     res.status(500).json({ message: "Failed to update download" });
   }
@@ -141,7 +150,7 @@ const deleteDownload = async (req, res) => {
     if (!item) return res.status(404).json({ message: "Download not found" });
 
     await prisma.supportDownload.delete({ where: { id: item.id } });
-    await removeFile(item.publicId);
+    await removeFile(item);
     res.json({ message: "Download deleted" });
   } catch (error) {
     console.error("deleteDownload:", error);
