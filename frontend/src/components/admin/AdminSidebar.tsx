@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { FiHome, FiBox, FiGrid, FiShoppingCart, FiImage, FiUsers, FiMail, FiLogOut, FiMenu, FiX, FiLayers, FiFileText, FiTag, FiDownload, FiCamera } from "react-icons/fi";
+import { FiHome, FiBox, FiGrid, FiShoppingCart, FiImage, FiUsers, FiMail, FiLogOut, FiMenu, FiX, FiLayers, FiFileText, FiTag, FiDownload, FiCamera, FiChevronDown } from "react-icons/fi";
 import { useState, useEffect } from "react";
 
 const navItems = [
@@ -26,6 +26,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
   const router = useRouter();
   const { admin, loading, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !admin) {
@@ -51,7 +52,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
   return (
     <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-gray-900 text-white transform transition-transform md:relative md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 flex-col bg-gray-900 text-white transform transition-transform md:sticky md:top-0 md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex items-center justify-between p-6 border-b border-gray-700">
           <div>
             <img src="/images/logo-nav.jpeg" alt="Uniworld" className="h-12 rounded-lg p-1 bg-white" />
@@ -76,12 +77,6 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
           ))}
         </nav>
 
-        <div className="shrink-0 p-4 border-t border-gray-700">
-          <div className="text-sm text-gray-400 mb-2">{admin.name}</div>
-          <button onClick={handleLogout} className="flex items-center gap-2 text-red-400 hover:text-red-300 text-sm">
-            <FiLogOut /> Logout
-          </button>
-        </div>
       </aside>
 
       {/* Overlay */}
@@ -91,11 +86,41 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
-        <header className="bg-white shadow-sm px-6 py-4 flex items-center justify-between md:justify-end">
-          <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
+        <header className="sticky top-0 z-30 flex items-center justify-between bg-white px-6 py-3 shadow-sm">
+          <button className="md:hidden" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
             <FiMenu size={24} />
           </button>
-          <span className="text-sm text-gray-600">Welcome, {admin.name}</span>
+
+          <div className="relative ml-auto">
+            <button
+              onClick={() => setProfileOpen((open) => !open)}
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
+                {(admin.name || "A").charAt(0).toUpperCase()}
+              </span>
+              <span className="hidden sm:block">{admin.name}</span>
+              <FiChevronDown size={14} className={`text-gray-400 transition-transform ${profileOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {profileOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setProfileOpen(false)} />
+                <div className="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
+                  <div className="border-b border-gray-100 px-4 py-3">
+                    <p className="truncate text-sm font-medium text-gray-900">{admin.name}</p>
+                    <p className="truncate text-xs text-gray-500">Administrator</p>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"
+                  >
+                    <FiLogOut size={15} /> Logout
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </header>
         <main className="flex-1 p-6">{children}</main>
       </div>
